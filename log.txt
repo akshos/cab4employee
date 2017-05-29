@@ -1,14 +1,13 @@
 
 DBInterface :
-	Will contain all the database connection related procedures.
-	There will be a class called DBConnection that maintains a connection to the database.
-	Each table will have a corresponding <table_name>DB.py file containing procedures for reading, writing and other database related tasks associated with that table.
+	Contains all the database connection related procedures.
+	There is a class called DBConnection that maintains a connection to the database.
+	Each table has a corresponding <table_name>DB.py file containing procedures for reading, writing and other database related tasks associated with that table.
 
 Insert procedures :
-	Each <table_name>DB.py file will have an insert procedure.
+	Each <table_name>DB.py file has an insert procedure.
 	Parameters : database cursor, dictionary with attribute-value pairs to be inserted
 
 employeeDB.py :
-	
-	insertEmployee( cursor, list ) : 
-	 
+
+	insertEmployee( cursor, list ) :
