@@ -1,17 +1,17 @@
 def insertEmployee( cursor, data ):
-	sql = "insert into employee values( " + \
-			data['eid']			+ " , " + 	\
-			data['first_name']	+ " , " + 	\
-			data['last_name'] 	+ " , "	+ 	\
-			data['date_of_reg'] + " , " + 	\
-			data['contact_num'] + " , " + 	\
-			data['account_id']  + " , "	+ 	\
-			data['time_in'] 	+ " , "	+ 	\
-			data['time_out'] 	+ " ) "
+	sql = "insert into employee values( \"" +   \
+			data['eid']			+ "\" , \"" + 	\
+			data['first_name']	+ "\" , \"" + 	\
+			data['last_name'] 	+ "\" , \""	+ 	\
+			data['date_of_reg'] + "\" ,   " + 	\
+			data['contact_num'] + "   , \"" + 	\
+			data['account_id']  + "\" , \""	+ 	\
+			data['time_in'] 	+ "\" , \""	+ 	\
+			data['time_out'] 	+ "\" ) "
 	cursor.execute( sql )
 
 def getEmployee( cursor, eid ):
-	sql = "select * from employee where eid=" + eid + " "
+	sql = "select * from employee where eid=\"" + eid + "\" "
 	data = {}
 	cursor.execute( sql )
 	if cursor.rowcount() == 0 :
@@ -28,7 +28,7 @@ def getEmployee( cursor, eid ):
 	return data
 
 def searchEmployee( cursor, eid ):
-	sql = "select * from employee where eid=" + eid + " "
+	sql = "select * from employee where eid=\"" + eid + "\" "
 	cursor.execute( sql )
 	if cursor.rowcount() == 0 :
 		return False
