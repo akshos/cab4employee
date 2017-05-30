@@ -1,7 +1,7 @@
 def insertDrivers( cursor, data ):
-	sql = "insert into drivers values( " + \
-			data['did']				+ " , " + 	\
-			data['name']			+ " , " + 	\
+	sql = "insert into drivers values(\"" + \
+			data['did']				+ "\" ,\" " + 	\
+			data['name']			+ "\" , " + 	\
 			data['contact_num'] 	+ " , "	+ 	\
 			data['rating']		 	+ " ) "
 	cursor.execute( sql )
@@ -25,4 +25,3 @@ def searchDrivers( cursor, did ):
 	if cursor.rowcount() == 0 :
 		return False
 	return True
-

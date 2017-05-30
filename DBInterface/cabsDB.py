@@ -1,8 +1,8 @@
 def insertCabs( cursor, data ):
-	sql = "insert into cabs values( " + \
-			data['cid']			+ " , " + 	\
-			data['c_model']		+ " , " + 	\
-			data['did']		 	+ " ) "
+	sql = "insert into cabs values(\" " + \
+			data['cid']			+ "\" ,\" " + 	\
+			data['c_model']		+ "\" ,\" " + 	\
+			data['did']		 	+ "\" ) "
 	cursor.execute( sql )
 
 def geCabs( cursor, cid ):
@@ -23,4 +23,3 @@ def searchCabs( cursor, cid ):
 	if cursor.rowcount() == 0 :
 		return False
 	return True
-

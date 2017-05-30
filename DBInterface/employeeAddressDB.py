@@ -1,9 +1,9 @@
 def insertEmployeeAddress( cursor, data ):
-	sql = "insert into employee_address values( " + \
-			data['eid']			+ " , " + 	\
-			data['house_num']	+ " , " + 	\
-			data['street_name'] + " , "	+ 	\
-			data['city'] 		+ " ) "
+	sql = "insert into employee_address values( \"" + \
+			data['eid']			+ "\" ,\" " + 	\
+			data['house_num']	+ "\" ,\" " + 	\
+			data['street_name'] + "\" ,\" "	+ 	\
+			data['city'] 		+ "\" ) "
 	cursor.execute( sql )
 
 def getEmployeeAddress( cursor, eid ):
@@ -25,4 +25,3 @@ def searchEmployeeAddress( cursor, eid ):
 	if cursor.rowcount() == 0 :
 		return False
 	return True
-

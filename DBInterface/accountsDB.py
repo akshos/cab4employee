@@ -1,7 +1,7 @@
 def insertAccount( cursor, data ):
-	sql = "insert into accounts values( " + \
-			data['aid']			+ " , " + 	\
-			data['name']	 	+ " ) "
+	sql = "insert into accounts values(\" " + \
+			data['aid']			+ "\" ,\" " + 	\
+			data['name']	 	+ "\" ) "
 	cursor.execute( sql )
 
 def getAccount( cursor, aid ):
@@ -21,4 +21,3 @@ def searchAccount( cursor, aid ):
 	if cursor.rowcount() == 0 :
 		return False
 	return True
-
