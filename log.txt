@@ -9,10 +9,4 @@ Insert procedures :
 	Parameters : database cursor, dictionary with attribute-value pairs to be inserted
 
 employeeDB.py :
-<<<<<<< HEAD
 	insertEmployee( cursor, list ) : 
-	 
-=======
-
-	insertEmployee( cursor, list ) :
->>>>>>> 2fda73f45bdfc2b9230d3c04f3cf8171958068f7
