@@ -11,7 +11,7 @@ def insertEmployee( cursor, data ):
 	cursor.execute( sql )
 
 def getEmployee( cursor, eid ):
-	sql = "select * from employee where eid=" + eid + " ;"
+	sql = "select * from employee where eid=" + eid + " "
 	data = { }
 	cursor.execute( sql )
 	if cursor.rowcount() == 0 :
@@ -28,9 +28,20 @@ def getEmployee( cursor, eid ):
 	return data
 
 def searchEmployee( cursor, eid ):
-	sql = "select * from employee where eid=" + eid + " ;"
+	sql = "select * from employee where eid=" + eid + " "
 	cursor.execute( sql )
 	if cursor.rowcount() == 0 :
 		return False
 	return True
+
+def getEids( cursor ) :
+	sql = "select eid from employee"
+	data = ()
+	cursor.execute( sql )
+	if( cursor.rowcount() == 0 ):
+		return None
+	rows = cursor.fetchall()
+	for row in rows :
+		data.append( str( row ) )
+	return data
 
