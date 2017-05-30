@@ -19,6 +19,8 @@ employeeDB.py :
 	insertEmployee( cursor, list ) : 
 	getEmployee( cursor, eid ) :
 	searchEmployee( cursor, eid ) :
+	getEids( cursor ) : returns all the eid entries in the table
+	getAllEmployees( cursor ) : returns all the rows of the table as a list of dictionary 
 	
 employeeAddressDB.py :
 	insertEmployeeAddress( cursor, list ) :
