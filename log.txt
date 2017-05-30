@@ -1,12 +1,47 @@
-
 DBInterface :
 	Contains all the database connection related procedures.
 	There is a class called DBConnection that maintains a connection to the database.
 	Each table has a corresponding <table_name>DB.py file containing procedures for reading, writing and other database related tasks associated with that table.
 
-Insert procedures :
-	Each <table_name>DB.py file has an insert procedure.
-	Parameters : database cursor, dictionary with attribute-value pairs to be inserted
+Each <table_name>DB.py file has the following common procedures
+	Insert procedures :
+		Parameters : database cursor, dictionary with attribute-value pairs to be inserted
+
+	Get Procedures :
+		Parameters : database cursor, primary key to be searched
+		Return : dictionary with attribute-value pairs of the row, None if not found
+
+	Search Procedures :
+		Parameters : database cursor, primary key to be searched
+		Return : True if found else False
 
 employeeDB.py :
 	insertEmployee( cursor, list ) : 
+	getEmployee( cursor, eid ) :
+	searchEmployee( cursor, eid ) :
+	
+employeeAddressDB.py :
+	insertEmployeeAddress( cursor, list ) :
+	getEmployeeAddress( cursor, eid ) :
+	searchEmployeeAddress( cursor, eid ) :
+
+accountsDB.py :
+	insertAccount( cursor, list ) :
+	getAccount( cursor, eid ) :
+	searchAccount( cursor, eid ) :
+
+allocationsDB.py :
+	insertAllocation( cursor, list ) :
+	getAllocation( cursor, eid ) :
+	searchAllocation( cursor, eid ) :
+
+cabsDB.py :
+	insertCab( cursor, list ) :
+	getCab( cursor, eid ) :
+	searchCab( cursor, eid ) :
+
+driversDB.py :
+	insertDriver( cursor, list ) :
+	getDriver( cursor, eid ) :
+	searchDriver( cursor, eid ) :
+	

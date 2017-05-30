@@ -34,5 +34,3 @@ def searchEmployee( cursor, eid ):
 		return False
 	return True
 
-
-
