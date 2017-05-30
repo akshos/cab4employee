@@ -52,13 +52,14 @@ def getAllEmployees( cursor ) :
 	cursor.execute( sql )
 	rows = cursor.fetchall()
 	for row in rows:
-		emp['eid'] 		= str( row[0] )
+		emp['eid'] 			= str( row[0] )
 		emp['first_name'] 	= str( row[1] )
 		emp['last_name'] 	= str( row[2] )
-		emp['date_of_reg'] = str( row[3] )
-		emp['contact_num'] = str( row[4] )
+		emp['date_of_reg'] 	= str( row[3] )
+		emp['contact_num'] 	= str( row[4] )
 		emp['account_id'] 	= str( row[5] )
 		emp['time_in']		= str( row[6] )
 		emp['time_out'] 	= str( row[7] )
 		data.append( emp )
 	return data 
+
