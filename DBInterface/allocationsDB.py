@@ -1,16 +1,16 @@
 def insertAllocations( cursor, data ):
 	sql = "insert into allocations values( \"" + \
-			data['aid']			+ "\" ,\" " + 	\
-			data['eid']			+ "\" ,\" " + 	\
-			data['cid'] 		+ "\" ,\" "	+ 	\
-			data['did'] 		+ "\" ,\" " + 	\
-			data['atime'] 		+ "\" , " + 	\
-			data['change_flag'] + " , "	+ 	\
+			data['aid']			+ "\" ,\"" 	+ 	\
+			data['eid']			+ "\" ,\"" 	+ 	\
+			data['cid'] 		+ "\" ,\""	+ 	\
+			data['did'] 		+ "\" ,\"" 	+ 	\
+			data['atime'] 		+ "\" , " 	+ 	\
+			data['change_flag'] + " , "		+ 	\
 			data['iftaken'] 	+ ") "
 	cursor.execute( sql )
 
 def getAllocations( cursor, aid ):
-	sql = "select * from allocations where aid=" + aid + " ;"
+	sql = "select * from allocations where aid=\"" + aid + "\" "
 	data = { }
 	cursor.execute( sql )
 	if cursor.rowcount() == 0 :
@@ -26,7 +26,7 @@ def getAllocations( cursor, aid ):
 	return data
 
 def searchAllocations( cursor, aid ):
-	sql = "select * from allocations where aid=" + aid + " ;"
+	sql = "select * from allocations where aid=\"" + aid + "\" "
 	cursor.execute( sql )
 	if cursor.rowcount() == 0 :
 		return False

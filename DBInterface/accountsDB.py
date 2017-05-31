@@ -1,11 +1,11 @@
 def insertAccount( cursor, data ):
-	sql = "insert into accounts values(\" " + \
-			data['aid']			+ "\" ,\" " + 	\
-			data['name']	 	+ "\" ) "
+	sql = "insert into accounts values(\"" 	+ 				\
+						data['aid']			+ "\" ,\"" + 	\
+						data['name']	 	+ "\" ) "
 	cursor.execute( sql )
 
 def getAccount( cursor, aid ):
-	sql = "select * from accounts where aid=" + aid + " ;"
+	sql = "select * from accounts where aid=\"" + aid + "\" "
 	data = { }
 	cursor.execute( sql )
 	if cursor.rowcount() == 0 :
@@ -16,7 +16,7 @@ def getAccount( cursor, aid ):
 	return data
 
 def searchAccount( cursor, aid ):
-	sql = "select * from accounts where aid=" + aid + " ;"
+	sql = "select * from accounts where aid=\"" + aid + "\" "
 	cursor.execute( sql )
 	if cursor.rowcount() == 0 :
 		return False

@@ -1,13 +1,13 @@
 def insertDrivers( cursor, data ):
 	sql = "insert into drivers values(\"" + \
-			data['did']				+ "\" ,\" " + 	\
-			data['name']			+ "\" , " + 	\
-			data['contact_num'] 	+ " , "	+ 	\
+			data['did']				+ "\" ,\"" 	+ 	\
+			data['name']			+ "\" , " 	+ 	\
+			data['contact_num'] 	+ " , "		+ 	\
 			data['rating']		 	+ " ) "
 	cursor.execute( sql )
 
 def getDrivers( cursor, did ):
-	sql = "select * from drivers where did=" + did + " ;"
+	sql = "select * from drivers where did=\"" + did + "\" ;"
 	data = { }
 	cursor.execute( sql )
 	if cursor.rowcount() == 0 :
@@ -20,7 +20,7 @@ def getDrivers( cursor, did ):
 	return data
 
 def searchDrivers( cursor, did ):
-	sql = "select * from drivers where did=" + did + " ;"
+	sql = "select * from drivers where did=\"" + did + "\" ;"
 	cursor.execute( sql )
 	if cursor.rowcount() == 0 :
 		return False
