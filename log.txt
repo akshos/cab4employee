@@ -1,3 +1,4 @@
+
 DBInterface :
 	Contains all the database connection related procedures.
 	There is a class called DBConnection that maintains a connection to the database.
@@ -16,12 +17,12 @@ Each <table_name>DB.py file has the following common procedures
 		Return : True if found else False
 
 employeeDB.py :
-	insertEmployee( cursor, list ) : 
+	insertEmployee( cursor, list ) :
 	getEmployee( cursor, eid ) :
 	searchEmployee( cursor, eid ) :
 	getEids( cursor ) : returns all the eid entries in the table
-	getAllEmployees( cursor ) : returns all the rows of the table as a list of dictionary 
-	
+	getAllEmployees( cursor ) : returns all the rows of the table as a list of dictionary
+
 employeeAddressDB.py :
 	insertEmployeeAddress( cursor, list ) :
 	getEmployeeAddress( cursor, eid ) :
@@ -46,4 +47,10 @@ driversDB.py :
 	insertDriver( cursor, list ) :
 	getDriver( cursor, eid ) :
 	searchDriver( cursor, eid ) :
-	
+
+
+Samples:
+	This folder contains basic resources for building the rest of the system.
+
+server.py: File demonstrates basic python networking as a Server.
+client.cs: File demonstrates basic c# networking as a Client.
