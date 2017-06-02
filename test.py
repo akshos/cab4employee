@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
-from DBInterface import employeeDB
-import MySQLdb
+from DBInterface import employeeDB, DBConnection
 
-db = MySQLdb.connect("localhost","cab4employee","","cab4employee")
-cursor = db.cursor()
+db = DBConnection.DBConnection("localhost", "cab4employee", "", "cab4employee")
+db.connect()
+cursor = db.getCursor()
 data = {}
 data['eid'] 		= "E01"
 data['first_name'] 	= "Akshay"
