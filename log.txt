@@ -54,3 +54,8 @@ Samples:
 
 server.py: File demonstrates basic python networking as a Server.
 client.cs: File demonstrates basic c# networking as a Client.
+
+companyinterface:
+	This folder contains all files dealing exclusively with the company interface.
+
+ClientFunctions.cs: File contains functions for all api calls to the server.
