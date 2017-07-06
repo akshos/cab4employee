@@ -1,6 +1,7 @@
 import threading
 from DBInterface import DBConnection, loginDB
 import time
+import traceback, sys
 
 class CompanyInterface (threading.Thread):
 
@@ -18,13 +19,13 @@ class CompanyInterface (threading.Thread):
 	
 	def sendData(self, data ):
 		self.clientConnection.send( data )
-		self.clientConnection.flush()
 	
 	def receiveData( self ):
 		return self.clientConnection.recv(1024)
 	
 	def disconnect( self ):
 		self.clientConnection.close()
+		print 'client disconnected'
 	
 	def login( self ): #authenticate using username, password and type and get eid from database
 		self.username = self.msgList[2]
@@ -37,18 +38,30 @@ class CompanyInterface (threading.Thread):
 			self.connectDB() #establish connection to database
 			self.login() #attempt authentication 
 			if self.eid == None : #if authentication failed
-				self.sendData("failed")	#send response that failed
+				self.sendData("failed\n")	#send response that failed
 				return #stop the thread due to login failure
 			else :
 				print 'sending done'
-				self.sendData("done") #send a login accepted message
+				self.sendData("done\n")
+				print 'sent'  #send a login accepted message
+			
+			##
+			#main request loop
+			##
 			while True:
 				print 'waiting for request'
 				self.msg = str( self.receiveData() ) #get a request from server
 				print self.msg
-				if self.msg == "disconnect" or self.msg == '0': #if disconnect request
-					return #stop thread
-		except:
-			print 'Something went wrong : Company Interface'
+				if self.msg == 'addemployee' :
+					print 'add employee'
+				else :
+					self.disconnect()
+					return
+			##
+			#
+			##
+			
+		except Exception, e:
+			print 'something wrong'
 		finally:
 			self.disconnect() # disconnect when leaving thread

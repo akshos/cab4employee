@@ -3,7 +3,9 @@ from CompanyInterface import companyInterface
 
 def server():
 	serverSocket = socket.socket()
-	serverSocket.setsockopt(socket.TCP_NODELAY, socket.SO_REUSEADDR, 1)
+	serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+	serverSocket.setsockopt( socket.IPPROTO_TCP, socket.TCP_NODELAY, 1 )
+	#serverSocket.setsockopt( socket.SOL_SOCKET, socket.SO_SNDBUF, 100 )
 	host = "192.168.2.33"
 	port = 2345
 	serverSocket.bind( (host,port) )
@@ -16,7 +18,7 @@ def server():
 			msgList = msg.split()
 			interfaceType = msgList[0]
 			print "interface type : ", interfaceType
-			if interfaceType == 'companyinterface': //spawn a thread for each client
+			if interfaceType == 'companyinterface': #spawn a thread for each client
 				companyInterface.CompanyInterface( clientConnection, msgList ).start()
 	except:
 		print 'something went wrong : server'
