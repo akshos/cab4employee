@@ -10,7 +10,7 @@ def authenticate( cursor, username, password, logintype ):
 	sql = "select eid from login where username=\"" + username + "\"AND password=\"" + password + "\"AND type=\"" + logintype + "\""
 	data = { }
 	cursor.execute( sql )
-	if cursor.rowcount() == 0 :
+	if cursor.rowcount == 0 :
 		return None
 	row = cursor.fetchone()
-	return row[4]
+	return row[0]

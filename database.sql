@@ -13,7 +13,7 @@ create table employee (
 
 create table login (
 	username varchar(20),
-	passsword varchar(30),
+	password varchar(30),
 	type varchar(10),
 	eid varchar(20),
 	primary key(username),
