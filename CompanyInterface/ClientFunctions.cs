@@ -1,6 +1,6 @@
 
 
-public static bool insert(TcpClient cs, string username, string password) {
+public static bool authenticate(TcpClient cs, string username, string password) {
   try{
       Stream serverStream = cs.GetStream();
       StreamWriter sw = new StreamWriter(serverStream);
