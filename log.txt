@@ -23,6 +23,10 @@ employeeDB.py :
 	getEids( cursor ) : returns all the eid entries in the table
 	getAllEmployees( cursor ) : returns all the rows of the table as a list of dictionary
 
+loginDB.py :
+	insertLogin(cursor, list) :
+  authenticate(cursor, username, password, logintype) :checks the login table for username, password and type to return eid.
+
 employeeAddressDB.py :
 	insertEmployeeAddress( cursor, list ) :
 	getEmployeeAddress( cursor, eid ) :
