@@ -11,6 +11,15 @@ create table employee (
 	foreign key(account_id) references accounts(aid)
 );
 
+create table login (
+	username varchar(20),
+	passsword varchar(30),
+	type varchar(10),
+	eid varchar(20),
+	primary key(username),
+	foreign key(eid) references employee(eid)
+);
+
 create table employee_address (
 	eid varchar(20),
 	house_num varchar(20),
