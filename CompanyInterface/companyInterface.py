@@ -33,7 +33,7 @@ class CompanyInterface (threading.Thread):
 		self.eid = loginDB.authenticate( self.cursor, self.username, password, self.loginType )
 		del self.msgList
 	
-	def addEmployee( self, msgList ):
+	def addEmployee( self, msgList ): #enter employee details into database
 		data = {}
 		data['eid'] 		= msgList[1];
 		data['first_name'] 	= msgList[2];
@@ -76,7 +76,7 @@ class CompanyInterface (threading.Thread):
 				self.msg = str( self.receiveData() ) #get a request from server
 				print self.msg
 				msgList = self.msg.split()
-				if msgList[0] == 'addemployee' :
+				if msgList[0] == 'addemployee' : #request to add an employee
 					print 'add employee'
 					addEmployee( msgList )
 					self.sendData("done")
