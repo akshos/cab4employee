@@ -1,5 +1,6 @@
 import socket
 from CompanyInterface import companyInterface
+from AgencyInterface import agencyInterface
 
 def server():
 	serverSocket = socket.socket()
@@ -20,6 +21,8 @@ def server():
 			print "interface type : ", interfaceType
 			if interfaceType == 'companyinterface': #spawn a thread for each client
 				companyInterface.CompanyInterface( clientConnection, msgList ).start()
+			elif interfaceType == 'agencyinterface':
+				agencyInterface.AgencyInterface( clientConnection, msgList ).start()
 	except:
 		print 'something went wrong : server'
 	finally:
