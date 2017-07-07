@@ -1,12 +1,12 @@
 import threading
 from DBInterface import DBConnection, loginDB, employeeDB, allocationsDB
 
-class CompanyInterface (threading.Thread):
+class AgencyInterface (threading.Thread):
 
 	def __init__( self, clientConnection, msgList ):
 		threading.Thread.__init__(self)
-		self.type = "Company Interface"
-		self.loginType = "admin"
+		self.type = "Agency Interface"
+		self.loginType = "agency"
 		self.clientConnection = clientConnection
 		self.msgList = msgList
 		
@@ -33,24 +33,19 @@ class CompanyInterface (threading.Thread):
 		self.eid = loginDB.authenticate( self.cursor, self.username, password, self.loginType )
 		del self.msgList
 	
-	def addEmployee( self, msgList ): #enter employee details into database
+	def addCab( self, msgList ): #enter employee details into database
 		data = {}
-		data['eid'] 		= msgList[1];
-		data['first_name'] 	= msgList[2];
-		data['last_name'] 	= msgList[3];
-		data['date_of_reg'] = msgList[4];
-		data['contact_num'] = msgList[5];
-		data['account_id'] 	= msgList[6];
-		data['time_in']		= msgList[7];
-		data['time_out'] 	= msgList[8];
-		employeeDB.insertEmployee( self.cursor, data )
+		data['cid'] 		= msgList[1];
+		data['c_model'] 	= msgList[2];
+		data['did'] 		= msgList[3];
+		cabsDB.insertCab( self.cursor, data )
 					
-	def sendAllocations( self ):
-		aidList = allocationsDB.getAllAid(self.cursor)
+	def sendCabs( self ):
+		cidList = cabsDB.getAllCid(self.cursor)
 		msg = ""
-		for aid in aidList:
-			data = getAllocations(cursor, aid)
-			msg += data[0] + " " + data[1] + " " + data[2] + " " + data[3] + " " + data[4]
+		for cid in aidList:
+			data = getCab(cursor, aid)
+			msg += data[0] + " " + data[1] + " " + data[2]
 		print msg
 		self.sendData(msg)
 	
@@ -75,9 +70,9 @@ class CompanyInterface (threading.Thread):
 				self.msg = str( self.receiveData() ) #get a request from server
 				print self.msg
 				msgList = self.msg.split()
-				if msgList[0] == 'addemployee' : #request to add an employee
-					print 'add employee'
-					addEmployee( msgList )
+				if msgList[0] == 'addcab' : #request to add an employee
+					print 'add cab'
+					addCab( msgList )
 					self.sendData("done")
 				else :
 					return

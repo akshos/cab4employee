@@ -1,11 +1,11 @@
-def insertCabs( cursor, data ):
+def insertCab( cursor, data ):
 	sql = "insert into cabs values(\" " + \
 			data['cid']			+ "\" ,\"" + 	\
 			data['c_model']		+ "\" ,\"" + 	\
 			data['did']		 	+ "\" ) "
 	cursor.execute( sql )
 
-def geCabs( cursor, cid ):
+def geCab( cursor, cid ):
 	sql = "select * from cabs where cid=\"" + cid + "\" "
 	data = { }
 	cursor.execute( sql )
@@ -17,9 +17,17 @@ def geCabs( cursor, cid ):
 	data['did'] 		= str( row[2] )
 	return data
 
-def searchCabs( cursor, cid ):
+def searchCab( cursor, cid ):
 	sql = "select * from cabs where cid=\"" + cid + "\" "
 	cursor.execute( sql )
 	if cursor.rowcount() == 0 :
 		return False
 	return True
+	
+def getAllCid( cursor ):
+	sql = "select cid from cabs"
+	cursor.execute(sql)
+	data=[]
+	for i in range ( 0, cursor.rowcount ):
+		data.append( cursor.fetchone()[0] )
+	return data
