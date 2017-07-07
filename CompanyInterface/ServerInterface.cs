@@ -30,6 +30,9 @@ namespace serverInterface{
                 outmsg = "companyinterface login " + username + " " + password;
                 sw.Write(outmsg);
                 recv = sr.ReadLine();
+                string recv1 = sr.ReadLine();
+                Console.WriteLine(recv1);
+
                 if (recv=="done")
                   return true;
                 else
@@ -43,13 +46,16 @@ namespace serverInterface{
 
       public bool addEmployee(string eid, string first_name, string last_name, string date_of_reg, string contact_number, string account_id, string time_in, string time_out){
           try{
-            outmsg="companyinterface addEmployee"+eid+" "+first_name+" "+last_name+" "+date_of_reg+" "+contact_number+" "+account_id+" "+time_in+" "+time_out;
+            outmsg="addemployee "+eid+" "+first_name+" "+last_name+" "+date_of_reg+" "+contact_number+" "+account_id+" "+time_in+" "+time_out;
             sw.Write(outmsg);
-            recv=sr.ReadLine();
-            if(recv="done")
-            return true;
-            else
-            return false;
+            recv = sr.ReadLine();
+                Console.WriteLine(recv);
+                if (recv == "done")
+                    return true;
+                else if (recv == "EC1")
+                    return false;
+                else
+                    return false;
           }
           catch{
             if (!cs.Connected)
@@ -57,8 +63,10 @@ namespace serverInterface{
                connect();
              }
              else
-             {Console.WriteLine("Error has occured ")
+             {
+                    Console.WriteLine("Error has occured ");
            }
+                return false;
           }
 
       }
