@@ -25,6 +25,14 @@ def getAllocations( cursor, aid ):
 	data['iftaken']			= str( row[6] )
 	return data
 
+def getAllAid(cursor):
+	sql = "select aid from allocations"
+	cursor.execute(sql)
+	data=[]
+	for i in range (0,cursor.rowcount):
+		data.append(cursor.fetchone()[0])
+	return data
+
 def searchAllocations( cursor, aid ):
 	sql = "select * from allocations where aid=\"" + aid + "\" "
 	cursor.execute( sql )

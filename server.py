@@ -23,7 +23,6 @@ def server():
 	except:
 		print 'something went wrong : server'
 	finally:
-		clientConnection.close()
 		serverSocket.shutdown(socket.SHUT_RDWR)
 		serverSocket.close()
 
