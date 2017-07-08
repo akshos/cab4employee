@@ -74,6 +74,8 @@ class CompanyInterface (threading.Thread):
 			while True:
 				print 'waiting for request'
 				self.msg = str( self.receiveData() ) #get a request from server
+				if msg == None:
+					return
 				print self.msg
 				msgList = self.msg.split()
 				if msgList[0] == 'addemployee' : #request to add an employee
