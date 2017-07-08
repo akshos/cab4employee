@@ -128,6 +128,14 @@ class AgencyInterface (threading.Thread):
 					print'get allocations'
 					self.sendAllocations()
 					self.sendData("done")
+				elif msglist[0] == 'cabfeedback':
+					print'cabfeedback'
+					self.getCabFeedback()
+					self.sendData("done")
+				elif msglist[0] == 'driverfeedback':
+					print'driver feedback'
+					self.getDriverFeedback()
+					self.sendData("done")
 				else :
 					return
 			##

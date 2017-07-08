@@ -14,6 +14,7 @@ namespace serverInterface
         StreamReader sr;
         string outmsg;
         string recv;
+        string inmsg;
 
         public void connect()
         {
@@ -26,6 +27,8 @@ namespace serverInterface
             this.sw.AutoFlush = true;
         }
 
+
+
         public bool authenticate(string username, string password)
         {
             try
@@ -34,8 +37,8 @@ namespace serverInterface
                 Console.WriteLine(username + " " + password);
                 sw.Write(outmsg);
                 recv = sr.ReadLine();
-                string recv1 = sr.ReadLine();
-                Console.WriteLine(recv1);
+                outmsg = sr.ReadLine();
+                Console.WriteLine(inmsg);
                 if (recv == "done")
                     return true;
                 else
@@ -77,6 +80,35 @@ namespace serverInterface
                 return false;
             }
 
+        }
+
+        public String getCabFeedback(){
+          outmsg = "cabfeedback "
+          sw.Write(outmsg);
+          recv=sr.ReadLine();
+          Console.WriteLine(recv);
+          inmsg=sr.ReadLine();
+          Console.WriteLine(inmsg);
+          if (recv == "done")
+              return true;
+          else if (recv == "EC1")
+              return false;
+          else
+              return false;
+        }
+        public String getDriverFeedback(){
+          outmsg = "driverfeedback "
+          sw.Write(outmsg);
+          recv=sr.ReadLine();
+          Console.WriteLine(recv);
+          inmsg=sr.ReadLine();
+          Console.WriteLine(inmsg);
+          if (recv == "done")
+              return true;
+          else if (recv == "EC1")
+              return false;
+          else
+              return false;
         }
 
         public String getAllocationsFromServer()
