@@ -23,7 +23,16 @@ def searchCab( cursor, cid ):
 	if cursor.rowcount() == 0 :
 		return False
 	return True
-	
+
+def getRating( cursor, cid):
+	sql= "select rating from cabs where cid=\"" + cid + "\" ;"
+	cursor.execute( sql )
+	if cursor.rowcount == 0
+		return None
+	row =cursor.fetchone()
+	return str( row[0] )
+
+
 def getAllCid( cursor ):
 	sql = "select cid from cabs"
 	cursor.execute(sql)

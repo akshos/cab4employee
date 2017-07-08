@@ -10,7 +10,7 @@ def getDrivers( cursor, did ):
 	sql = "select * from drivers where did=\"" + did + "\" ;"
 	data = { }
 	cursor.execute( sql )
-	if cursor.rowcount() == 0 :
+	if cursor.rowcount == 0 :
 		return None
 	row = cursor.fetchone()
 	data['did'] 			= str( row[0] )
@@ -19,9 +19,25 @@ def getDrivers( cursor, did ):
 	data['rating']			= str( row[3] )
 	return data
 
+def getRating( cursor, did):
+	sql= "select rating from drivers where did=\"" + did + "\" ;"
+	cursor.execute( sql )
+	if cursor.rowcount == 0
+		return None
+	row =cursor.fetchone()
+	return str( row[0] )
+
 def searchDrivers( cursor, did ):
 	sql = "select * from drivers where did=\"" + did + "\" ;"
 	cursor.execute( sql )
-	if cursor.rowcount() == 0 :
+	if cursor.rowcount == 0 :
 		return False
 	return True
+
+def getAllDid( cursor ):
+	sql = "select did from drivers"
+	cursor.execute(sql)
+	data=[]
+	for i in range ( 0, cursor.rowcount ):
+		data.append( cursor.fetchone()[0] )
+	return data
