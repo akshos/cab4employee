@@ -35,7 +35,7 @@ def searchEmployee( cursor, eid ):
 		return False
 	return True
 
-def getEidFromUsername( cursor, eid ):
+def getEidFromUsername( cursor, username ):
 	sql = "select eid from employee where username=\"" + username + "\" "
 	cursor.execute( sql )
 	row = cursor.fetchone()

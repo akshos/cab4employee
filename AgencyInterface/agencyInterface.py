@@ -87,6 +87,8 @@ class AgencyInterface (threading.Thread):
 				print 'waiting for request'
 				self.msg = str( self.receiveData() ) #get a request from server
 				print self.msg
+				if msg == None:
+					return
 				msgList = self.msg.split()
 				if msgList[0] == 'addcab' : #request to add an employee
 					print 'add cab'
@@ -104,6 +106,10 @@ class AgencyInterface (threading.Thread):
 					print 'send drivers'
 					self.sendDrivers()
 					self.sendData( "done" )
+				elif msgList[0] == 'getallocations':
+					print'get allocations'
+					self.sendAllocations()
+					self.sendData("done")
 				else :
 					return
 			##

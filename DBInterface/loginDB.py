@@ -1,3 +1,5 @@
+import employeeDB
+
 def insertLogin( cursor, data ):
 	sql = "insert into login values( \"" 	+ 	\
 			data['username']	+ "\" ,\"" 	+ 	\
@@ -14,5 +16,5 @@ def authenticate( cursor, username, password, logintype ):
 	if cursor.rowcount == 0 :
 		return None
 	if logintype == 'admin' or logintype == 'emp':
-		eid = getEidFromUsername( cursor )
+		eid = employeeDB.getEidFromUsername( cursor, username )
 	return eid
