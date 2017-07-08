@@ -19,7 +19,7 @@ namespace serverInterface
         {
             this.cs = new TcpClient();
             cs.ReceiveBufferSize = 1024;
-            this.cs.Connect("192.168.2.33", 2345);
+            this.cs.Connect("192.168.1.8", 2345);
             this.serverStream = this.cs.GetStream();
             this.sw = new StreamWriter(serverStream);
             this.sr = new StreamReader(serverStream);
@@ -31,6 +31,7 @@ namespace serverInterface
             try
             {
                 outmsg = "agencyinterface login " + username + " " + password;
+                Console.WriteLine(username + " " + password);
                 sw.Write(outmsg);
                 recv = sr.ReadLine();
                 string recv1 = sr.ReadLine();
@@ -47,11 +48,11 @@ namespace serverInterface
             }
         }
 
-        public bool addCab(string cid, string c_model, string did)
+        public bool addCab(string cid, string c_model, string maxpassengers)
         {
             try
             {
-                outmsg = "addemployee " + cid + " " + c_model + " " + did;
+                outmsg = "addemployee " + cid + " " + c_model + " " + maxpassengers;
                 sw.Write(outmsg);
                 recv = sr.ReadLine();
                 Console.WriteLine(recv);
@@ -76,6 +77,15 @@ namespace serverInterface
                 return false;
             }
 
+        }
+
+        public String getAllocationsFromServer()
+        {
+            outmsg = "getallocations";
+            sw.Write(outmsg);
+            recv = sr.ReadLine();
+            Console.WriteLine(recv);
+            return recv;
         }
 
     }

@@ -35,9 +35,9 @@ class AgencyInterface (threading.Thread):
 	
 	def addCab( self, msgList ): #enter employee details into database
 		data = {}
-		data['cid'] 		= msgList[1]
-		data['c_model'] 	= msgList[2]
-		data['did'] 		= msgList[3]
+		data['cid'] 			= msgList[1]
+		data['c_model'] 		= msgList[2]
+		data['maxpassengers'] 	= msgList[3]
 		cabsDB.insertCab( self.cursor, data )
 					
 	def sendCabs( self ):
