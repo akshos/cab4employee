@@ -13,6 +13,7 @@ namespace serverInterface{
         StreamReader sr;
         string outmsg;
         string recv;
+        string inmsg;
 
         public void connect(){
             this.cs = new TcpClient();
@@ -30,8 +31,8 @@ namespace serverInterface{
                 outmsg = "companyinterface login " + username + " " + password;
                 sw.Write(outmsg);
                 recv = sr.ReadLine();
-                string recv1 = sr.ReadLine();
-                Console.WriteLine(recv1);
+                inmsg = sr.ReadLine();//contains data recieved from server
+                Console.WriteLine(inmsg);
 
                 if (recv=="done")
                   return true;
