@@ -7,6 +7,7 @@ def insertEmployee( cursor, data ):
 			data['contact_num'] + "   , \"" + 	\
 			data['account_id']  + "\" , \""	+ 	\
 			data['time_in'] 	+ "\" , \""	+ 	\
+			data['username']	+ "\" , \"" +	\
 			data['time_out'] 	+ "\" ) "
 	cursor.execute( sql )
 
@@ -33,6 +34,12 @@ def searchEmployee( cursor, eid ):
 	if cursor.rowcount == 0 :
 		return False
 	return True
+
+def getEidFromUsername( cursor, eid ):
+	sql = "select eid from employee where username=\"" + username + "\" "
+	cursor.execute( sql )
+	row = cursor.fetchone()
+	return row[0]
 
 def getEids( cursor ) :
 	sql = "select eid from employee"

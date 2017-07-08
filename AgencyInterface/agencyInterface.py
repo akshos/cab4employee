@@ -43,9 +43,9 @@ class AgencyInterface (threading.Thread):
 	def sendCabs( self ):
 		cidList = cabsDB.getAllCid(self.cursor)
 		msg = ""
-		for cid in aidList:
-			data = getCab(cursor, aid)
-			msg += data[0] + " " + data[1] + " " + data[2]
+		for cid in cidList:
+			data = getCab( self.cursor, cid)
+			msg += data[0] + " " + data[1] + " " + data[2] + " "
 		print msg
 		self.sendData(msg)
 	
@@ -57,11 +57,21 @@ class AgencyInterface (threading.Thread):
 		data['rating'] 			= msgList[4]
 		cabsDB.insertDriver( self.cursor, data )
 	
+	def sendDrivers( self ):
+		didList = driversDB.getAllDid(self.cursor)
+		msg = ""
+		for did in didList:
+			data = getDriver( self.cursor, did )
+			msg += data[0] + " " + data[1] + " " + data[2] + " " + data[3] + " "
+		print msg
+		self.sendData( msg )
+	
 	def run( self ): #main entry point
 		try:
 			self.connectDB() #establish connection to database
 			self.login() #attempt authentication 
 			if self.eid == None : #if authentication failed
+				print 'login failed : agency interface'
 				self.sendData("failed")	#send response that failed
 				return #stop the thread due to login failure
 			else :
@@ -82,9 +92,17 @@ class AgencyInterface (threading.Thread):
 					print 'add cab'
 					addCab( msgList )
 					self.sendData( "done" )
-				if msgList[0] == 'adddriver' :
+				elif msgList[0] == 'adddriver' :
 					print 'add driver'
 					addDriver( msgList )
+					self.sendData( "done" )
+				elif msgList[0] == 'sendcabs' :
+					print 'send cabs'
+					self.sendCabs()
+					self.sendData( "done" )
+				elif msgList[0] == 'senddrivers':
+					print 'send drivers'
+					self.sendDrivers()
 					self.sendData( "done" )
 				else :
 					return

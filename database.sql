@@ -15,9 +15,7 @@ create table login (
 	username varchar(20),
 	password varchar(30),
 	type varchar(10),
-	eid varchar(20),
-	primary key(username),
-	foreign key(eid) references employee(eid)
+	primary key(username)
 );
 
 create table employee_address (

@@ -42,7 +42,7 @@ class CompanyInterface (threading.Thread):
 		data['contact_num'] = msgList[5];
 		data['account_id'] 	= msgList[6];
 		data['time_in']		= msgList[7];
-		data['time_out'] 	= msgList[8];
+		data['time_out'] 	= msgList[8]; 
 		employeeDB.insertEmployee( self.cursor, data )
 
 	def sendAllocations( self ):
