@@ -9,22 +9,22 @@ class CompanyInterface (threading.Thread):
 		self.loginType = "admin"
 		self.clientConnection = clientConnection
 		self.msgList = msgList
-		
+
 	def connectDB( self ): #connect to the sql database and create cursor object
 		self.db = DBConnection.DBConnection("localhost", "cab4employee", "", "cab4employee")
 		self.db.connect()
 		self.cursor = self.db.getCursor()
-	
+
 	def sendData(self, data ):
-		self.clientConnection.send( data + '\n' ) 
-	
+		self.clientConnection.send( data + '\n' )
+
 	def receiveData( self ):
 		return self.clientConnection.recv(1024)
-	
+
 	def disconnect( self ):
 		self.clientConnection.close()
 		print 'client disconnected'
-	
+
 	def login( self ): #authenticate using username, password and type and get eid from database
 		if self.msgList[1] != 'login':
 			return None
@@ -32,7 +32,7 @@ class CompanyInterface (threading.Thread):
 		password = self.msgList[3]
 		self.eid = loginDB.authenticate( self.cursor, self.username, password, self.loginType )
 		del self.msgList
-	
+
 	def addEmployee( self, msgList ): #enter employee details into database
 		data = {}
 		data['eid'] 		= msgList[1];
@@ -44,20 +44,20 @@ class CompanyInterface (threading.Thread):
 		data['time_in']		= msgList[7];
 		data['time_out'] 	= msgList[8];
 		employeeDB.insertEmployee( self.cursor, data )
-					
+
 	def sendAllocations( self ):
 		aidList = allocationsDB.getAllAid(self.cursor)
 		msg = ""
 		for aid in aidList:
 			data = getAllocations(cursor, aid)
-			msg += data[0] + " " + data[1] + " " + data[2] + " " + data[3] + " " + data[4]
+			msg += data[aid] + " " + getEmployee(cursor,data['eid'])['first_name'] + " " + getEmployee(cursor,data['eid'])['last_name'] +" "+ data[atime]+" "
 		print msg
 		self.sendData(msg)
-	
+
 	def run( self ): #main entry point
 		try:
 			self.connectDB() #establish connection to database
-			self.login() #attempt authentication 
+			self.login() #attempt authentication
 			if self.eid == None : #if authentication failed
 				self.sendData("failed")	#send response that failed
 				return #stop the thread due to login failure
@@ -66,7 +66,7 @@ class CompanyInterface (threading.Thread):
 				self.sendData("done")
 				sendAllocations()
 				print 'sent'  #send a login accepted message
-			
+
 			##
 			#main request loop
 			##
