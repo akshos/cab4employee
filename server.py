@@ -7,7 +7,7 @@ def server():
 	serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 	serverSocket.setsockopt( socket.IPPROTO_TCP, socket.TCP_NODELAY, 1 )
 	#serverSocket.setsockopt( socket.SOL_SOCKET, socket.SO_SNDBUF, 100 )
-	host = "192.168.2.33"
+	host = "192.168.1.8"
 	port = 2345
 	serverSocket.bind( (host,port) )
 	try:

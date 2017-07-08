@@ -49,8 +49,9 @@ class CompanyInterface (threading.Thread):
 		aidList = allocationsDB.getAllAid(self.cursor)
 		msg = ""
 		for aid in aidList:
-			data = getAllocations(cursor, aid)
-			msg += data[aid] + " " + getEmployee(cursor,data['eid'])['first_name'] + " " + getEmployee(cursor,data['eid'])['last_name'] +" "+ data[atime]+" "
+			data = allocationsDB.getAllocations(self.cursor, aid)
+			employee = employeeDB.getEmployee( self.cursor, data['eid'] )
+			msg += data['aid'] + " " + employee['first_name'] + " " + employee['last_name'] +" "+ data['atime']+" "
 		print msg
 		self.sendData(msg)
 
@@ -64,7 +65,7 @@ class CompanyInterface (threading.Thread):
 			else :
 				print 'sending done'
 				self.sendData("done")
-				sendAllocations()
+				self.sendAllocations()
 				print 'sent'  #send a login accepted message
 
 			##

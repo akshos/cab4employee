@@ -13,7 +13,7 @@ def getAllocations( cursor, aid ):
 	sql = "select * from allocations where aid=\"" + aid + "\" "
 	data = { }
 	cursor.execute( sql )
-	if cursor.rowcount() == 0 :
+	if cursor.rowcount == 0 :
 		return None
 	row = cursor.fetchone()
 	data['aid'] 			= str( row[0] )

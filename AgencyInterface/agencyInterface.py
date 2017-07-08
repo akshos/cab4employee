@@ -35,9 +35,9 @@ class AgencyInterface (threading.Thread):
 	
 	def addCab( self, msgList ): #enter employee details into database
 		data = {}
-		data['cid'] 		= msgList[1];
-		data['c_model'] 	= msgList[2];
-		data['did'] 		= msgList[3];
+		data['cid'] 		= msgList[1]
+		data['c_model'] 	= msgList[2]
+		data['did'] 		= msgList[3]
 		cabsDB.insertCab( self.cursor, data )
 					
 	def sendCabs( self ):
@@ -48,6 +48,14 @@ class AgencyInterface (threading.Thread):
 			msg += data[0] + " " + data[1] + " " + data[2]
 		print msg
 		self.sendData(msg)
+	
+	def addDriver( msgList ):
+		data = {}
+		data['did'] 			= msgList[1]
+		data['name'] 			= msgList[2]
+		data['contact_number'] 	= msgList[3]
+		data['rating'] 			= msgList[4]
+		cabsDB.insertDriver( self.cursor, data )
 	
 	def run( self ): #main entry point
 		try:
@@ -73,7 +81,11 @@ class AgencyInterface (threading.Thread):
 				if msgList[0] == 'addcab' : #request to add an employee
 					print 'add cab'
 					addCab( msgList )
-					self.sendData("done")
+					self.sendData( "done" )
+				if msgList[0] == 'adddriver' :
+					print 'add driver'
+					addDriver( msgList )
+					self.sendData( "done" )
 				else :
 					return
 			##
