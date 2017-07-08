@@ -87,7 +87,7 @@ class AgencyInterface (threading.Thread):
 				print 'waiting for request'
 				self.msg = str( self.receiveData() ) #get a request from server
 				print self.msg
-				if msg == None:
+				if self.msg == None:
 					return
 				msgList = self.msg.split()
 				if msgList[0] == 'addcab' : #request to add an employee

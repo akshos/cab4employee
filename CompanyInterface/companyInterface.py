@@ -56,8 +56,8 @@ class CompanyInterface (threading.Thread):
 		self.sendData(msg)
 
 	def searchEmployee( self, msgList ):
-		data=employeeDB.getEmployee(cursor, msgList[1])
-		msg+= data['eid']+" "+data['first_name']+" "+data['last_name']+" "+data['contact_number']+" "+data['account_id']+" "+data['time_in']+" "+data['time_out']
+		data=employeeDB.getEmployee( self.cursor, msgList[1])
+		msg = data['eid']+" "+data['first_name']+" "+data['last_name']+" "+data['contact_num']+" "+data['account_id']+" "+data['time_in']+" "+data['time_out']
 		self.sendData(msg)
 
 	def run( self ): #main entry point
@@ -79,15 +79,19 @@ class CompanyInterface (threading.Thread):
 			while True:
 				print 'waiting for request'
 				self.msg = str( self.receiveData() ) #get a request from server
+				if self.msg == None:
+					return
 				print self.msg
 				msgList = self.msg.split()
+				if len(msgList) == 0:
+					return
 				if msgList[0] == 'addemployee' : #request to add an employee
 					print 'add employee'
-					addEmployee( msgList )
+					self.addEmployee( msgList )
 					self.sendData("done")
 				if msgList[0] == 'search' :#request to search for an employee
 					print 'search employee'
-					searchEmployee(msgList)
+					self.searchEmployee(msgList)
 				else :
 					return
 			##
