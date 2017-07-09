@@ -37,7 +37,7 @@ namespace serverInterface
                 Console.WriteLine(username + " " + password);
                 sw.Write(outmsg);
                 recv = sr.ReadLine();
-                outmsg = sr.ReadLine();
+                //outmsg = sr.ReadLine();
                 Console.WriteLine(inmsg);
                 if (recv == "done")
                     return true;

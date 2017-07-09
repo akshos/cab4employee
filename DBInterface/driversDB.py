@@ -22,7 +22,7 @@ def getDrivers( cursor, did ):
 def getRating( cursor, did):
 	sql= "select rating from drivers where did=\"" + did + "\" ;"
 	cursor.execute( sql )
-	if cursor.rowcount == 0
+	if cursor.rowcount == 0:
 		return None
 	row =cursor.fetchone()
 	return str( row[0] )

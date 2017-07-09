@@ -1,5 +1,5 @@
 import threading
-from DBInterface import DBConnection, loginDB, employeeDB, allocationsDB, cabsDB
+from DBInterface import DBConnection, loginDB, employeeDB, allocationsDB, cabsDB, driversDB
 
 class AgencyInterface (threading.Thread):
 
@@ -78,7 +78,7 @@ class AgencyInterface (threading.Thread):
 	def getCabFeedback( self ):
 		cidlist = cabsDB.getAllCid(self.cursor)
 		msg = ""
-		for cid in didist:
+		for cid in cidlist:
 			data = cabsDB.getRating( self.cursor, cid)
 			msg+= data[0] + " "
 		print msg
@@ -108,6 +108,8 @@ class AgencyInterface (threading.Thread):
 				if self.msg == None:
 					return
 				msgList = self.msg.split()
+				if len( msgList ) == 0:
+					return
 				if msgList[0] == 'addcab' : #request to add an employee
 					print 'add cab'
 					self.addCab( msgList )
@@ -128,11 +130,11 @@ class AgencyInterface (threading.Thread):
 					print'get allocations'
 					self.sendAllocations()
 					self.sendData("done")
-				elif msglist[0] == 'cabfeedback':
+				elif msgList[0] == 'cabfeedback':
 					print'cabfeedback'
 					self.getCabFeedback()
 					self.sendData("done")
-				elif msglist[0] == 'driverfeedback':
+				elif msgList[0] == 'driverfeedback':
 					print'driver feedback'
 					self.getDriverFeedback()
 					self.sendData("done")
