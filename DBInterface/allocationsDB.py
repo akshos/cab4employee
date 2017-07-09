@@ -25,6 +25,23 @@ def getAllocations( cursor, aid ):
 	data['iftaken']			= str( row[6] )
 	return data
 
+def getEmpAllocations( cursor, eid ):
+	sql = "select * from allocations where eid=\"" + eid + "\" "
+	data = { }
+	cursor.execute( sql )
+	if cursor.rowcount == 0 :
+		return None
+	row = cursor.fetchone()
+	data['aid'] 			= str( row[0] )
+	data['eid'] 			= str( row[1] )
+	data['cid'] 			= str( row[2] )
+	data['did'] 			= str( row[3] )
+	data['atime'] 			= str( row[4] )
+	data['change_flag'] 	= str( row[5] )
+	data['iftaken']			= str( row[6] )
+	return data
+
+
 def getAllAid(cursor):
 	sql = "select aid from allocations"
 	cursor.execute(sql)
