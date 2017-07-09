@@ -1,8 +1,10 @@
-def insertDrivers( cursor, data ):
+def insertDriver( cursor, data ):
 	sql = "insert into drivers values(\"" + \
 			data['did']				+ "\" ,\"" 	+ 	\
-			data['name']			+ "\" , " 	+ 	\
-			data['contact_num'] 	+ " , "		+ 	\
+			data['first_name']		+ "\" ,\"" 	+ 	\
+			data['last_name']		+ "\" ,\"" 	+ 	\
+			data['cid']				+ "\" , " 	+ 	\
+			data['contact_number'] 	+ " , "		+ 	\
 			data['rating']		 	+ " ) "
 	cursor.execute( sql )
 
@@ -14,9 +16,11 @@ def getDrivers( cursor, did ):
 		return None
 	row = cursor.fetchone()
 	data['did'] 			= str( row[0] )
-	data['name'] 			= str( row[1] )
-	data['contact_num'] 	= str( row[2] )
-	data['rating']			= str( row[3] )
+	data['first_name'] 		= str( row[1] )
+	data['last_name'] 		= str( row[2] )
+	data['cid'] 			= str( row[3] )
+	data['contact_number'] 	= str( row[4] )
+	data['rating']			= str( row[5] )
 	return data
 
 def getRating( cursor, did):
@@ -33,6 +37,22 @@ def searchDrivers( cursor, did ):
 	if cursor.rowcount == 0 :
 		return False
 	return True
+
+def getCid( cursor, did ):
+	sql = "select cid from drivers where did=\"" + did + "\" ;"
+	cursor.execute( sql )
+	if cursor.rowcount == 0:
+		return None
+	row = cursor.fetchone()
+	return str( row[0] )
+
+def getDid( cursor, cid ):
+	sql = "select did from drivers where cid=\"" + cid + "\" ;"
+	cursor.execute( sql )
+	if cursor.rowcount == 0:
+		return None
+	row = cursor.fetchone()
+	return str( row[0] )
 
 def getAllDid( cursor ):
 	sql = "select did from drivers"

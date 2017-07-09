@@ -20,7 +20,7 @@ namespace serverInterface
         {
             this.cs = new TcpClient();
             cs.ReceiveBufferSize = 1024;
-            this.cs.Connect("192.168.1.8", 2345);
+            this.cs.Connect("192.168.2.33", 2345);
             this.serverStream = this.cs.GetStream();
             this.sw = new StreamWriter(serverStream);
             this.sr = new StreamReader(serverStream);

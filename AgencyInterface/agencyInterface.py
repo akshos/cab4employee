@@ -49,13 +49,16 @@ class AgencyInterface (threading.Thread):
 		print msg
 		self.sendData(msg)
 
-	def addDriver( msgList ):
+	def addDriver( self, msgList ):
 		data = {}
 		data['did'] 			= msgList[1]
-		data['name'] 			= msgList[2]
-		data['contact_number'] 	= msgList[3]
-		data['rating'] 			= msgList[4]
-		cabsDB.insertDriver( self.cursor, data )
+		data['first_name'] 		= msgList[2]
+		data['last_name'] 		= msgList[3]
+		data['cid'] 			= msgList[4]
+		data['contact_number'] 	= msgList[5]
+		data['rating'] 			= "5"
+		driversDB.insertDriver( self.cursor, data )
+		self.db.commit()
 
 	def sendDrivers( self ):
 		didList = driversDB.getAllDid(self.cursor)

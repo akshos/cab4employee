@@ -23,7 +23,7 @@ def server():
 				companyInterface.CompanyInterface( clientConnection, msgList ).start()
 			elif interfaceType == 'agencyinterface':
 				agencyInterface.AgencyInterface( clientConnection, msgList ).start()
-			else
+			else :
 				clientConnection.close()
 	except:
 		print 'something went wrong : server'

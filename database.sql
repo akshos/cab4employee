@@ -35,8 +35,8 @@ create table accounts (
 create table cabs (
 	cid varchar(20),
 	c_model varchar(20),
-	did varchar(20) references drivers(did),
-	primary key(cid),
+	maxpassengers int(5),
+	rating int(1),
 	foreign key (c_model) references carbrands (c_model)
 );
 
@@ -48,7 +48,9 @@ create table carbrands (
 
 create table drivers (
 	did varchar(20),
-	name varchar(20),
+	fitst_name varchar(20),
+	last_name varchar(20),
+	cid	varchar(20), 
 	contact_number decimal,
 	rating decimal,
 	primary key (did)
