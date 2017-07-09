@@ -44,7 +44,21 @@ class EmployeeInterface (threading.Thread):
         driver=driversDB.getDrivers(self.cursor, allocationsDB['did'])
         msg=self.eid+" "+allocationdata['aid']+" "+allocationdata['cid']+" "+allocationdata['']
 
+	def changePassword( self, msgList ):
 
+
+	def changeAllocationTime(self, msgList):
+
+
+	def sendFeedback(self,msgList):
+		allocationdata=allocationsDB.getEmpAllocations(self.cursor, self.eid)
+		cabdata=cabsDB.getCab(self.cursor , allocationdata['cid'])
+		driverdata=driversDB(self.cursor, allocationdata['did'])
+		cabrating=(cabdata['rating']+msgList[1])/2
+		cabsDB.setRating(self.cursor, cabrating)
+		driverrating=(driverdata['rating']+msgList[2])/2
+		driversDB.setRating(self.cursor, driverrating)
+		#include adding comments to database as msgList[3]
 
 	def run( self ): #main entry point
 		try:
@@ -80,25 +94,17 @@ class EmployeeInterface (threading.Thread):
 					print 'cab details'
 					self.getCabDetails()
 					self.sendData( "done" )
-				elif msgList[0] == 'sendcabs' :
+				elif msgList[0] == 'changepassword' :
 					print 'send cabs'
-					self.sendCabs()
+					self.changePassword(msgList)
 					self.sendData( "done" )
-				elif msgList[0] == 'senddrivers':
+				elif msgList[0] == 'feedback':
 					print 'send drivers'
-					self.sendDrivers()
+					self.sendFeedback(msgList)
 					self.sendData( "done" )
-				elif msgList[0] == 'getallocations':
+				elif msgList[0] == 'changetime':
 					print'get allocations'
-					self.sendAllocations()
-					self.sendData("done")
-				elif msgList[0] == 'cabfeedback':
-					print'cabfeedback'
-					self.getCabFeedback()
-					self.sendData("done")
-				elif msgList[0] == 'driverfeedback':
-					print'driver feedback'
-					self.getDriverFeedback()
+					self.changeAllocationTime(msgList)
 					self.sendData("done")
 				else :
 					return

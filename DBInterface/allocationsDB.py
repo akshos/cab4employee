@@ -25,6 +25,11 @@ def getAllocations( cursor, aid ):
 	data['iftaken']			= str( row[6] )
 	return data
 
+def DeleteAllocation(cursor, aid):
+	sql = "delete from allocations where aid=\"" + aid + "\" "
+	cursor.execute( sql )
+	return None
+
 def getEmpAllocations( cursor, eid ):
 	sql = "select * from allocations where eid=\"" + eid + "\" "
 	data = { }

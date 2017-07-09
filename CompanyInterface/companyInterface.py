@@ -60,6 +60,10 @@ class CompanyInterface (threading.Thread):
 		msg = data['eid']+" "+data['first_name']+" "+data['last_name']+" "+data['contact_num']+" "+data['account_id']+" "+data['time_in']+" "+data['time_out']
 		self.sendData(msg)
 
+	def rejectAllocation( self, msgList ):
+		for i in range(1,msgList.len()-1):
+			allocationsDB.DeleteAllocation(self.cursor,msgList[0])
+
 	def run( self ): #main entry point
 		try:
 			self.connectDB() #establish connection to database
@@ -92,6 +96,11 @@ class CompanyInterface (threading.Thread):
 				if msgList[0] == 'search' :#request to search for an employee
 					print 'search employee'
 					self.searchEmployee(msgList)
+				if msgList[0] == 'reject' :#request to reject an allocation
+					print 'reject allocation'
+					self.rejectAllocation(msgList)
+					self.sendData("done")
+
 				else :
 					return
 			##
