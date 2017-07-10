@@ -1,3 +1,4 @@
+
 def insertAllocations( cursor, data ):
 	sql = "insert into allocations values( \"" + \
 			data['aid']			+ "\" ,\"" 	+ 	\
@@ -9,7 +10,7 @@ def insertAllocations( cursor, data ):
 			data['iftaken'] 	+ ") "
 	cursor.execute( sql )
 
-def getAllocations( cursor, aid ):
+def getAllocation( cursor, aid ):
 	sql = "select * from allocations where aid=\"" + aid + "\" "
 	data = { }
 	cursor.execute( sql )
@@ -25,10 +26,24 @@ def getAllocations( cursor, aid ):
 	data['iftaken']			= str( row[6] )
 	return data
 
-def DeleteAllocation(cursor, aid):
-	sql = "delete from allocations where aid=\"" + aid + "\" "
+def deleteAllocation(cursor, aid):
+	sql = "delete from allocations where aid=\"" + aid + "\" ;"
 	cursor.execute( sql )
 	return None
+
+def getEid(cursor, aid):
+	sql = "select eid from allocations where aid=\"" + aid + "\" ; "
+	cursor.execute( sql )
+	data = cursor.fetchone()[0]
+	return data
+
+def getTimeCid(cursor, aid):
+	sql = "select atime,cid from allocations where aid=\"" + aid + "\" ;"
+	cursor.execute( sql )
+	row = cursor.fetchone()
+	time = str(row[0])
+	cid = row[1]
+	return time, cid
 
 def getEmpAllocations( cursor, eid ):
 	sql = "select * from allocations where eid=\"" + eid + "\" "

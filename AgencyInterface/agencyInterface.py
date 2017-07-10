@@ -1,5 +1,5 @@
 import threading
-from DBInterface import DBConnection, loginDB, employeeDB, allocationsDB, cabsDB, driversDB
+from DBInterface import DBConnection, loginDB, employeeDB, allocationsDB, cabsDB, driversDB, employeeAddressDB
 
 class AgencyInterface (threading.Thread):
 
@@ -60,6 +60,18 @@ class AgencyInterface (threading.Thread):
 		driversDB.insertDriver( self.cursor, data )
 		self.db.commit()
 
+	def sendAllocations( self ):
+		data = allocationsDB.getAllAid( self.cursor )
+		msg = ""
+		for aid in data :
+			eid = allocationsDB.getEid( self.cursor, aid )
+			address = employeeAddressDB.getEmployeeAddress( self.cursor, eid )
+			time, cid = allocationsDB.getTimeCid( self.cursor, aid )
+			msg += aid + " " + address['house_num'] + " " + address['street_name'] + " " + address['city'] + " " 
+			msg += time + " " + cid + " "
+		print msg
+		self.sendData( msg )
+			
 	def sendDrivers( self ):
 		didList = driversDB.getAllDid(self.cursor)
 		msg = ""
@@ -70,11 +82,11 @@ class AgencyInterface (threading.Thread):
 		self.sendData( msg )
 
 	def sendCabs( self ):
-		didList = cabsDB.getAllCid(self.cursor)
+		cidList = cabsDB.getAllCid(self.cursor)
 		msg = ""
-		for did in didList:
-			data = cabsDB.getCabs( self.cursor, cid )
-			msg += data['did'] + " " + data['first_name'] + " " + data['last_name'] + " " + data['rating'] + " "
+		for cid in cidList:
+			data = cabsDB.getCab( self.cursor, cid )
+			msg += data['cid'] + " " + data['c_model'] + " " + data['maxpassengers'] + " " + data['rating'] + " "
 		print "msg"+msg
 		self.sendData( msg )
 
@@ -120,13 +132,13 @@ class AgencyInterface (threading.Thread):
 					print 'send drivers'
 					self.sendDrivers()
 					self.sendData( "done" )
-				elif msgList[0] == 'getallocations':
+				elif msgList[0] == 'sendallocations':
 					print'get allocations'
 					self.sendAllocations()
 					self.sendData("done")
 				elif msgList[0] == 'cabfeedback':
 					print'cabfeedback'
-					self.getCabFeedback()
+					self.sendCabs()
 					self.sendData("done")
 				elif msgList[0] == 'driverfeedback':
 					print'driver feedback'

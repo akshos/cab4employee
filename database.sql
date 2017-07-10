@@ -66,3 +66,10 @@ create table allocations (
 	iftaken boolean,
 	primary key (aid)
 );
+
+
+insert into allocations values( 'A01','E01','C01','D01','00:00:00',0,0 );
+insert into allocations values( 'A02','E02','C02','D03','00:00:00',0,0 );
+insert into allocations values( 'A03','E03','C03','D02','00:00:00',0,0 );
+insert into allocations values( 'A04','E04','C02','D02','00:00:00',0,0 );
+

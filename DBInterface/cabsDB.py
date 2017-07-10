@@ -17,6 +17,7 @@ def getCab( cursor, cid ):
 	data['cid'] 			= str( row[0] )
 	data['c_model'] 		= str( row[1] )
 	data['maxpassengers'] 	= str( row[2] )
+	data['rating']			= str( row[3] )
 	return data
 
 def searchCab( cursor, cid ):

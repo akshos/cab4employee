@@ -49,7 +49,7 @@ class CompanyInterface (threading.Thread):
 		aidList = allocationsDB.getAllAid(self.cursor)
 		msg = ""
 		for aid in aidList:
-			data = allocationsDB.getAllocations(self.cursor, aid)
+			data = allocationsDB.getAllocation(self.cursor, aid)
 			employee = employeeDB.getEmployee( self.cursor, data['eid'] )
 			msg += data['aid'] + " " + employee['first_name'] + " " + employee['last_name'] +" "+ data['atime']+" "
 		print msg
@@ -62,7 +62,7 @@ class CompanyInterface (threading.Thread):
 
 	def rejectAllocation( self, msgList ):
 		for i in range( 1, len(msgList) ):
-			allocationsDB.DeleteAllocation(self.cursor,msgList[i])
+			allocationsDB.deleteAllocation(self.cursor,msgList[i])
 		self.db.commit()
 
 	def run( self ): #main entry point
@@ -92,16 +92,16 @@ class CompanyInterface (threading.Thread):
 					return
 				if msgList[0] == 'allocations' :
 					print'send allocations'
-					self.sendAllocations(msgList)
+					self.sendAllocations()
 					self.sendData('done')
-				if msgList[0] == 'addemployee' : #request to add an employee
+				elif msgList[0] == 'addemployee' : #request to add an employee
 					print 'add employee'
 					self.addEmployee( msgList )
 					self.sendData("done")
-				if msgList[0] == 'search' :#request to search for an employee
+				elif msgList[0] == 'search' :#request to search for an employee
 					print 'search employee'
 					self.searchEmployee(msgList)
-				if msgList[0] == 'reject' :#request to reject an allocation
+				elif msgList[0] == 'reject' :#request to reject an allocation
 					print 'reject allocation'
 					self.rejectAllocation(msgList)
 					self.sendData("done")

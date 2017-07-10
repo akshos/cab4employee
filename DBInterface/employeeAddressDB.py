@@ -10,7 +10,7 @@ def getEmployeeAddress( cursor, eid ):
 	sql = "select * from employee_address where eid=\"" + eid + "\" "
 	data = { }
 	cursor.execute( sql )
-	if cursor.rowcount() == 0 :
+	if cursor.rowcount == 0 :
 		return None
 	row = cursor.fetchone()
 	data['eid'] 		= str( row[0] )
@@ -22,6 +22,6 @@ def getEmployeeAddress( cursor, eid ):
 def searchEmployeeAddress( cursor, eid ):
 	sql = "select * from employee_address where eid=\"" + eid + "\" "
 	cursor.execute( sql )
-	if cursor.rowcount() == 0 :
+	if cursor.rowcount == 0 :
 		return False
 	return True
