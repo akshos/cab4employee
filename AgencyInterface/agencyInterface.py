@@ -64,27 +64,18 @@ class AgencyInterface (threading.Thread):
 		didList = driversDB.getAllDid(self.cursor)
 		msg = ""
 		for did in didList:
-			data = getDriver( self.cursor, did )
-			msg += data[0] + " " + data[1] + " " + data[2] + " " + data[3] + " "
-		print msg
+			data = driversDB.getDrivers( self.cursor, did )
+			msg += data['did'] + " " + data['first_name'] + " " + data['last_name'] + " " + data['rating'] + " "
+		print "msg"+msg
 		self.sendData( msg )
 
-	def getDriverFeedback( self ):
-		didlist = driversDB.getAllDid(self.cursor)
+	def sendCabs( self ):
+		didList = cabsDB.getAllCid(self.cursor)
 		msg = ""
-		for did in didlist:
-			data = driversDB.getRating( self.cursor, did)
-			msg+= data[0] + " "
-		print msg
-		self.sendData( msg )
-
-	def getCabFeedback( self ):
-		cidlist = cabsDB.getAllCid(self.cursor)
-		msg = ""
-		for cid in cidlist:
-			data = cabsDB.getRating( self.cursor, cid)
-			msg+= data[0] + " "
-		print msg
+		for did in didList:
+			data = cabsDB.getCabs( self.cursor, cid )
+			msg += data['did'] + " " + data['first_name'] + " " + data['last_name'] + " " + data['rating'] + " "
+		print "msg"+msg
 		self.sendData( msg )
 
 	def run( self ): #main entry point
@@ -139,7 +130,7 @@ class AgencyInterface (threading.Thread):
 					self.sendData("done")
 				elif msgList[0] == 'driverfeedback':
 					print'driver feedback'
-					self.getDriverFeedback()
+					self.sendDrivers()
 					self.sendData("done")
 				else :
 					return

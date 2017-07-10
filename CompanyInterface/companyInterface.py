@@ -61,8 +61,9 @@ class CompanyInterface (threading.Thread):
 		self.sendData(msg)
 
 	def rejectAllocation( self, msgList ):
-		for i in range(1,msgList.len()-1):
-			allocationsDB.DeleteAllocation(self.cursor,msgList[0])
+		for i in range( 1, len(msgList) ):
+			allocationsDB.DeleteAllocation(self.cursor,msgList[i])
+		self.db.commit()
 
 	def run( self ): #main entry point
 		try:

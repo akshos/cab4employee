@@ -7,7 +7,7 @@ def insertCab( cursor, db, data ):
 	cursor.execute( sql )
 	db.commit()
 
-def geCab( cursor, cid ):
+def getCab( cursor, cid ):
 	sql = "select * from cabs where cid=\"" + cid + "\" "
 	data = { }
 	cursor.execute( sql )

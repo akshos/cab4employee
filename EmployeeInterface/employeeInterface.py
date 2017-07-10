@@ -32,23 +32,23 @@ class EmployeeInterface (threading.Thread):
 		password = self.msgList[3]
 		self.eid = loginDB.authenticate( self.cursor, self.username, password, self.loginType )
 		del self.msgList
-
-    def getDetails( self, msgList ):
-        empdata=employeeDB.getEmployee( self.cursor, self.eid)
-        msg=self.eid+" "+empdata['first_name']+" "+empdata['last_name']
-        print msg
-        self.sendData(msg)
-
-    def getCabDetails( self ):
-        allocationdata=allocationsDB.getEmpAllocations(self.cursor, self.eid)
-        driver=driversDB.getDrivers(self.cursor, allocationsDB['did'])
-        msg=self.eid+" "+allocationdata['aid']+" "+allocationdata['cid']+" "+allocationdata['']
+		
+	def getDetails( self, msgList ):
+		empdata = employeeDB.getEmployee( self.cursor, self.eid)
+		msg = self.eid + " " + empdata['first_name'] + " " + empdata['last_name']
+		print msg
+		self.sendData(msg)
+        
+	def getCabDetails( self ):
+		allocationdata = allocationsDB.getEmpAllocations(self.cursor, self.eid)
+		driver = driversDB.getDrivers(self.cursor, allocationsDB['did'])
+		msg = self.eid + " " + allocationdata['aid'] + " " + allocationdata['cid'] + " " + allocationdata['']
 
 	def changePassword( self, msgList ):
-
+		print 'change password'
 
 	def changeAllocationTime(self, msgList):
-
+		print 'change allocation'
 
 	def sendFeedback(self,msgList):
 		allocationdata=allocationsDB.getEmpAllocations(self.cursor, self.eid)
