@@ -89,6 +89,10 @@ class CompanyInterface (threading.Thread):
 				msgList = self.msg.split()
 				if len(msgList) == 0:
 					return
+				if msgList[0] == 'allocations' :
+					print'send allocations'
+					self.sendAllocations(msgList)
+					self.sendData('done')
 				if msgList[0] == 'addemployee' : #request to add an employee
 					print 'add employee'
 					self.addEmployee( msgList )
