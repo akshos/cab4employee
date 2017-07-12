@@ -27,6 +27,15 @@ def searchCab( cursor, cid ):
 		return False
 	return True
 
+def getCidList(cursor):
+	sql = "select * from cabs;"
+	cursor.execute(sql)
+	rows = cursor.fetchall()
+	cidList = []
+	for row in rows:
+		cidList.append( row[0] )
+	return cidList
+
 def getRating( cursor, cid):
 	sql= "select rating from cabs where cid=\"" + cid + "\" ;"
 	cursor.execute( sql )

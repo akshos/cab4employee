@@ -90,6 +90,14 @@ class AgencyInterface (threading.Thread):
 		print "msg"+msg
 		self.sendData( msg )
 
+	def sendCidList(self):
+		cidList = cabsDB.getCidList(self.cursor)
+		msg = ""
+		for cid in cidList:
+			msg += str( cid ) + " "
+		print msg
+		self.sendData(msg)
+	
 	def run( self ): #main entry point
 		try:
 			self.connectDB() #establish connection to database
@@ -119,31 +127,35 @@ class AgencyInterface (threading.Thread):
 				if msgList[0] == 'addcab' : #request to add an employee
 					print 'add cab'
 					self.addCab( msgList )
-					self.sendData( "done" )
+					#self.sendData( "done" )
 				elif msgList[0] == 'adddriver' :
 					print 'add driver'
 					self.addDriver( msgList )
-					self.sendData( "done" )
+					#self.sendData( "done" )
 				elif msgList[0] == 'sendcabs' :
 					print 'send cabs'
 					self.sendCabs()
-					self.sendData( "done" )
+					#self.sendData( "done" )
 				elif msgList[0] == 'senddrivers':
 					print 'send drivers'
 					self.sendDrivers()
-					self.sendData( "done" )
+					#self.sendData( "done" )
 				elif msgList[0] == 'sendallocations':
-					print'get allocations'
+					print 'get allocations'
 					self.sendAllocations()
-					self.sendData("done")
+					#self.sendData("done")
 				elif msgList[0] == 'cabfeedback':
 					print'cabfeedback'
 					self.sendCabs()
-					self.sendData("done")
+					#self.sendData("done")
 				elif msgList[0] == 'driverfeedback':
-					print'driver feedback'
+					print  'driver feedback'
 					self.sendDrivers()
-					self.sendData("done")
+					#self.sendData("done")
+				elif msgList[0] == 'sendcidlist':
+					print 'send cidlist'
+					self.sendCidList()
+					#self.sendData("done")
 				else :
 					return
 			##
