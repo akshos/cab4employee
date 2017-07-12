@@ -41,7 +41,7 @@ def getEidFromUsername( cursor, username ):
 	row = cursor.fetchone()
 	return row[0]
 
-def getEids( cursor ) :
+def getAllEid( cursor ) :
 	sql = "select eid from employee"
 	data = []
 	cursor.execute( sql )
@@ -51,6 +51,7 @@ def getEids( cursor ) :
 	for row in rows :
 		data.append( str( row ) )
 	return data
+
 
 def getAllEmployees( cursor ) :
 	sql = "select * from employee"
@@ -68,5 +69,4 @@ def getAllEmployees( cursor ) :
 		emp['time_in']		= str( row[6] )
 		emp['time_out'] 	= str( row[7] )
 		data.append( emp )
-	return data 
-
+	return data

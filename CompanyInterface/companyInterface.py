@@ -47,6 +47,8 @@ class CompanyInterface (threading.Thread):
 
 	def sendAllocations( self ):
 		aidList = allocationsDB.getAllAid(self.cursor)
+		if (aidList==None)
+			self.sendData('fail')
 		msg = ""
 		for aid in aidList:
 			data = allocationsDB.getAllocation(self.cursor, aid)
@@ -64,6 +66,15 @@ class CompanyInterface (threading.Thread):
 		for i in range( 1, len(msgList) ):
 			allocationsDB.deleteAllocation(self.cursor,msgList[i])
 		self.db.commit()
+
+	def sendEmployeeList(self):
+		eidList = employeeDB.getAllEid(self.cursor)
+		msg=""
+		for eid in eidList:
+			data = employeeDB.getEmployee(self.cursor,eid)
+			msg= data['eid']+" "+data['first_name']+" "+data[last_name]+" "+data['date_of_reg']+" "+data['contact_num']+" "data['account_id']+" "+data['time_in']+" "+data['time_out']
+		print msg
+		self.sendData(msg)
 
 	def run( self ): #main entry point
 		try:
@@ -104,6 +115,10 @@ class CompanyInterface (threading.Thread):
 				elif msgList[0] == 'reject' :#request to reject an allocation
 					print 'reject allocation'
 					self.rejectAllocation(msgList)
+					self.sendData("done")
+				elif msgList[0] == 'employeelist' :#request employee listens
+					print 'send employee list'
+					self.sendEmployeeList()
 					self.sendData("done")
 
 				else :
