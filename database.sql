@@ -5,8 +5,8 @@ create table employee (
 	date_of_reg date,
 	contact_num decimal(10),
 	account_id varchar(20),
-	time_in varchar(20),
-	time_out varchar(20),
+	time_in time,
+	time_out time,
 	username varchar(20),
 	primary key(eid)
 );
@@ -68,6 +68,16 @@ create table allocations (
 	primary key (aid)
 );
 
+create table allocations_history (
+	aid varchar(20),
+	eid varchar(20),
+	cid varchar(20),
+	did varchar(20),
+	atime time,
+	change_flag boolean,
+	iftaken boolean,
+	primary key (aid)
+);
 
 insert into allocations values( 'A01','E01','C01','D01','00:00:00',0,0 );
 insert into allocations values( 'A02','E02','C02','D03','00:00:00',0,0 );
