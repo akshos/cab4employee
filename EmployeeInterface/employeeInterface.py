@@ -33,7 +33,7 @@ class EmployeeInterface (threading.Thread):
 		self.eid = loginDB.authenticate( self.cursor, self.username, password, self.loginType )
 		del self.msgList
 		
-	def getDetails( self, msgList ):
+	def getDetails( self ):
 		empdata = employeeDB.getEmployee( self.cursor, self.eid)
 		msg = self.eid + " " + empdata['first_name'] + " " + empdata['last_name']
 		print msg
@@ -88,7 +88,7 @@ class EmployeeInterface (threading.Thread):
 					return
 				if msgList[0] == 'idreq' : #request to add an employee
 					print 'id request'
-					self.getDetails( msgList )
+					self.getDetails()
 					self.sendData( "done" )
 				elif msgList[0] == 'cabdetails' :
 					print 'cab details'

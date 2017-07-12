@@ -1,3 +1,4 @@
+import cabsDB
 
 def insertAllocations( cursor, data ):
 	sql = "insert into allocations values( \"" + \
@@ -31,6 +32,22 @@ def deleteAllocation(cursor, aid):
 	cursor.execute( sql )
 	return None
 
+def modifyCid(cursor, aid, cid):
+	sql = "update allocations set cid=\"" + cid + "\" where aid=\"" + aid + "\" ;"
+	cursor.execute(sql)
+	if cursor.rowcount == 0:
+		return False
+	return True
+
+def getAvailableCidList(cursor):
+	sql = "select cabs.cid from cabs left join allocations on cabs.cid = allocations.cid where allocations.cid is null;"
+ 	cursor.execute(sql)
+ 	rows = cursor.fetchall()
+ 	data = []
+ 	for row in rows :
+ 		data.append(row[0])
+ 	return data
+ 	
 def getEid(cursor, aid):
 	sql = "select eid from allocations where aid=\"" + aid + "\" ; "
 	cursor.execute( sql )

@@ -49,7 +49,7 @@ def getAllEid( cursor ) :
 		return None
 	rows = cursor.fetchall()
 	for row in rows :
-		data.append( str( row ) )
+		data.append( str( row[0] ) )
 	return data
 
 

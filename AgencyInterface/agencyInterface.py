@@ -98,6 +98,24 @@ class AgencyInterface (threading.Thread):
 		print msg
 		self.sendData(msg)
 	
+	def allocateCab(self, msgList):
+		aid = msgList[1]
+		cid = msgList[2]
+		status = allocationsDB.modifyCid( self.cursor, aid, cid )
+		if( status == True ):
+			self.db.commit()
+			self.sendData("success")
+		else:
+			self.sendData("fail")
+	
+	def sendAvailableCidList(self):
+		cidList = allocationsDB.getAvailableCidList(self.cursor)
+		msg = ""
+		for cid in cidList:
+			msg += str(cid) + " "
+		print msg
+		self.sendData(msg)
+	
 	def run( self ): #main entry point
 		try:
 			self.connectDB() #establish connection to database
@@ -156,6 +174,12 @@ class AgencyInterface (threading.Thread):
 					print 'send cidlist'
 					self.sendCidList()
 					#self.sendData("done")
+				elif msgList[0] == 'sendavailablecidlist':
+					print 'send available cidlist'
+					self.sendAvailableCidList()
+				elif msgList[0] == 'allocatecab':
+					print 'allocate cab'
+					self.allocateCab(msgList)
 				else :
 					return
 			##

@@ -3,6 +3,7 @@ def insertEmployeeAddress( cursor, data ):
 			data['eid']			+ "\" ,\"" 	+ 	\
 			data['house_num']	+ "\" ,\"" 	+ 	\
 			data['street_name'] + "\" ,\""	+ 	\
+			data['postal_code'] + "\" ,\"" 	+	\
 			data['city'] 		+ "\" ) "
 	cursor.execute( sql )
 
@@ -17,6 +18,29 @@ def getEmployeeAddress( cursor, eid ):
 	data['house_num'] 	= str( row[1] )
 	data['street_name'] = str( row[2] )
 	data['city'] 		= str( row[3] )
+	data['postal_code'] = str( row[4] )
+	return data
+
+def getDistinctPostalCodes( cursor, eid ):
+	sql = "select distinct postal_code from employee_address;"
+	data = []
+	cursor.execute(sql)
+	if cursor.rowcount == 0:
+		return None
+	rows = cursor.fetchall()
+	for row in rows:
+		data.append(row[0])
+	return data
+
+def getEidListWithPostalCode(cursor, postalCode):
+	sql = "select eid from employee_address where postal_code=\"" + postalCode + "\" ;"
+	data = []
+	cursor.execute(sql)
+	if cursor.rowcount == 0:
+		return None
+	rows = cursor.fetchall()
+	for row in rows:
+		data.append(row[0])
 	return data
 
 def searchEmployeeAddress( cursor, eid ):

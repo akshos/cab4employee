@@ -47,7 +47,7 @@ class CompanyInterface (threading.Thread):
 
 	def sendAllocations( self ):
 		aidList = allocationsDB.getAllAid(self.cursor)
-		if (aidList==None)
+		if (aidList==None):
 			self.sendData('fail')
 		msg = ""
 		for aid in aidList:
@@ -69,10 +69,11 @@ class CompanyInterface (threading.Thread):
 
 	def sendEmployeeList(self):
 		eidList = employeeDB.getAllEid(self.cursor)
+		print 'eid list : ' + str(eidList)
 		msg=""
 		for eid in eidList:
 			data = employeeDB.getEmployee(self.cursor,eid)
-			msg= data['eid']+" "+data['first_name']+" "+data[last_name]+" "+data['date_of_reg']+" "+data['contact_num']+" "data['account_id']+" "+data['time_in']+" "+data['time_out']
+			msg += data['eid']+" "+data['first_name']+" "+data['last_name']+" "+data['date_of_reg']+" "+data['contact_num']+" "+data['account_id']+" "+data['time_in']+" "+data['time_out']+" "
 		print msg
 		self.sendData(msg)
 

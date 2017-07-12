@@ -5,10 +5,10 @@ create table employee (
 	date_of_reg date,
 	contact_num decimal(10),
 	account_id varchar(20),
-	time_in time,
-	time_out time,
-	primary key(eid),
-	foreign key(account_id) references accounts(aid)
+	time_in varchar(20),
+	time_out varchar(20),
+	username varchar(20),
+	primary key(eid)
 );
 
 create table login (
@@ -23,7 +23,8 @@ create table employee_address (
 	house_num varchar(20),
 	street_name varchar(20),
 	city varchar(20),
-	primary key(eid),foreign key (eid) references employee (eid)
+	postal_code decimal(20),
+	primary key(eid)
 );
 
 create table accounts (
@@ -37,7 +38,7 @@ create table cabs (
 	c_model varchar(20),
 	maxpassengers int(5),
 	rating int(1),
-	foreign key (c_model) references carbrands (c_model)
+	primary key(cid)
 );
 
 create table carbrands (
@@ -58,9 +59,9 @@ create table drivers (
 
 create table allocations (
 	aid varchar(20),
-	eid varchar(20) references employee (eid),
-	cid varchar(20) references cabs (cid),
-	did varchar(20) references drivers(did),
+	eid varchar(20),
+	cid varchar(20),
+	did varchar(20),
 	atime time,
 	change_flag boolean,
 	iftaken boolean,
