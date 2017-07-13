@@ -10,7 +10,7 @@ def server():
 	serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 	serverSocket.setsockopt( socket.IPPROTO_TCP, socket.TCP_NODELAY, 1 )
 	#serverSocket.setsockopt( socket.SOL_SOCKET, socket.SO_SNDBUF, 100 )
-	host = "192.168.1.8"
+	host = "192.168.1.4"
 	port = 2346
 	serverSocket.bind( (host,port) )
 	
@@ -22,6 +22,7 @@ def server():
 			clientConnection, clientAddress = serverSocket.accept()
 			print "received request from : ", clientAddress
 			msg = str( clientConnection.recv(1024) )
+			print 'Recieved initial message : ' + msg
 			msgList = msg.split()
 			interfaceType = msgList[0]
 			print "interface type : ", interfaceType
