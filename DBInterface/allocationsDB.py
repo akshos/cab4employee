@@ -126,10 +126,12 @@ def cancelAllocation( cursor, aid, eid ):
 	row = cursor.fetchone()
 	eids = str( row[0] )
 	eidList=eids.split(',')
+	#print "eid="+eid+"eidlist:"
+	#print eidList
 	for id in eidList:
 		if id!=eid:
-			neweid+=id+" "
-	print neweid
+			neweid+=id+","
+	#print neweid
+	neweid = neweid[:-1]
 	sql = "update allocations set eid ='"+neweid+"' where aid= '"+aid+"'"
 	cursor.execute( sql )
-	db.commit()

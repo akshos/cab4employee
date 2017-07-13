@@ -68,5 +68,7 @@ def searchCabs(cursor, pattern):
 		data['rating']			= str( row[3] )
 		dataList.append(data)
 	return dataList
-	
-	
+
+def setRating(cursor, rate, cid):
+	sql="update cabs set rating ='"+str(rate)+"'where cid='"+cid+"'"
+	cursor.execute(sql)

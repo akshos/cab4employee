@@ -8,14 +8,14 @@ def insertLogin( cursor, data ):
 			data['eid'] 		+ ") "
 	cursor.execute( sql )
 
-def changepassword(cursor, eid, newpass):
-	try:
-		sql = "update login set password ='"+newpass+"' where eid= '"+eid+"'"
+def changePassword(cursor, un, newpass):
+	#try:
+		sql = "update login set password ='"+newpass+"' where username= '"+un+"'"
 		cursor.execute( sql )
-		db.commit()
+
 		return 1
-	except:
-		return 0
+	#except:
+	#	return 0
 
 def authenticate( cursor, username, password, logintype ):
 	sql = "select username from login where username=\"" + username + "\"AND password=\"" + password + "\"AND type=\"" + logintype + "\""
