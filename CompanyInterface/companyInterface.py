@@ -1,5 +1,5 @@
 import threading
-from DBInterface import DBConnection, loginDB, employeeDB, allocationsDB
+from DBInterface import DBConnection, loginDB, employeeDB, allocationsDB, employeeAddressDB, cabsDB, driversDB
 
 class CompanyInterface (threading.Thread):
 
@@ -67,6 +67,21 @@ class CompanyInterface (threading.Thread):
 			allocationsDB.deleteAllocation(self.cursor,msgList[i])
 		self.db.commit()
 
+	def sendExtraDetails(self,aid):
+		allocation=allocationsDB.getAllocation(self.cursor, aid)
+		eidList=allocation.split(',')
+		employeedetails=""
+		for eid in eidList:
+			employee=employeeDB.getEmployee(self.cursor,eid)
+			address=employeeAddressDB.getEmployeeAddress(self.cursor,eid)
+			employeedetails+=data['eid']+" "+data['first_name']+" "+data['last_name']+" "+data['date_of_reg']+" "+data['contact_num']+" "+data['account_id']+" "+data['time_in']+" "+data['time_out']+" "+address['house_num']+" "+ address['street_name']+" "+address['city']+" "+address['postal_code']+" "
+		cab=cabsDB.getCab(self.cursor,allocation['cid'])
+		cabdetails=cab['cid']+" "+cab['c_model']+" "+cab[m'maxpassengers']
+		driver=driversDB.getDrivers(self.cursor,allocation['did'])
+		driverdetails=driver['did']+" "+driver['first_name']+" "+driver['last_name']+" "+driver['contact_number']+" "+driver['rating']
+		msg=cabdetails+" "+driverdetails+" "+employeedetails
+		self.sendData(msg)	
+
 	def sendEmployeeList(self):
 		eidList = employeeDB.getAllEid(self.cursor)
 		print 'eid list : ' + str(eidList)
@@ -121,7 +136,10 @@ class CompanyInterface (threading.Thread):
 					print 'send employee list'
 					self.sendEmployeeList()
 					self.sendData("done")
-
+				elif msgList[0] == 'extra':#request for extra allocaton details
+					print 'send extra details'
+					self.sendExtraDetails(msgList)
+					self.sendData("done")
 				else :
 					return
 			##
