@@ -24,7 +24,7 @@ def getDriver( cursor, did ):
 	return data
 
 def searchDrivers(cursor, pattern):
-	sql = "select * from drivers where fitst_name like \'%" + pattern + "%\' ; "
+	sql = "select * from drivers where first_name like \'%" + pattern + "%\' ; "
 	dataList = []
 	cursor.execute(sql)
 	rows = cursor.fetchall()

@@ -117,6 +117,13 @@ def searchAllocations( cursor, aid ):
 		return False
 	return True
 
+def getAllocationType(cursor, aid):
+	sql = "select direction from allocations where aid=\""+aid+"\";"
+	cursor.execute(sql)
+	row = cursor.fetchone()
+	data = str( row[0] )
+	return data
+
 def cancelAllocation( cursor, aid, eid ):
 	sql = "select eid from allocations where aid=\"" + aid + "\" "
 	cursor.execute( sql )

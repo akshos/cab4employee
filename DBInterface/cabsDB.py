@@ -3,7 +3,7 @@ def insertCab( cursor, db, data ):
 			data['cid']				+ "\" ,\"" + 	\
 			data['c_model']			+ "\" ,\"" + 	\
 			data['maxpassengers']	+ "\" ,\"" + 	\
-			"0"						+ "\" ) "
+			data['rating']			+ "\" ) "
 	cursor.execute( sql )
 	db.commit()
 
