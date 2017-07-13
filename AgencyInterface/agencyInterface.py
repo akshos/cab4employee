@@ -38,7 +38,9 @@ class AgencyInterface (threading.Thread):
 		data['cid'] 			= msgList[1]
 		data['c_model'] 		= msgList[2]
 		data['maxpassengers'] 	= msgList[3]
+		data['rating'] 			= "5"
 		cabsDB.insertCab( self.cursor, self.db, data )
+		self.sendData("done")
 
 	def sendCabs( self ):
 		cidList = cabsDB.getAllCid(self.cursor)
@@ -59,16 +61,14 @@ class AgencyInterface (threading.Thread):
 		data['rating'] 			= "5"
 		driversDB.insertDriver( self.cursor, data )
 		self.db.commit()
+		self.sendData("done")
 
 	def sendAllocations( self ):
-		data = allocationsDB.getAllAid( self.cursor )
+		dataList = allocationsDB.getAllocations( self.cursor )
 		msg = ""
-		for aid in data :
-			eid = allocationsDB.getEid( self.cursor, aid )
-			address = employeeAddressDB.getEmployeeAddress( self.cursor, eid )
-			time, cid = allocationsDB.getTimeCid( self.cursor, aid )
-			msg += aid + " " + address['house_num'] + " " + address['street_name'] + " " + address['city'] + " " 
-			msg += time + " " + cid + " "
+		for data in dataList:
+			count = len( data['eid'].split(',') )
+			msg += data['aid']+" "+data['cid']+" "+str(count)+" "+data['atime']+" "
 		print msg
 		self.sendData( msg )
 			
@@ -76,9 +76,9 @@ class AgencyInterface (threading.Thread):
 		didList = driversDB.getAllDid(self.cursor)
 		msg = ""
 		for did in didList:
-			data = driversDB.getDrivers( self.cursor, did )
-			msg += data['did'] + " " + data['first_name'] + " " + data['last_name'] + " " + data['rating'] + " "
-		print "msg"+msg
+			data = driversDB.getDriver( self.cursor, did )
+			msg += data['did'] + " " + data['first_name'] + " " + data['last_name'] + " " + data['cid'] + " " + data['contact_number'] + " " + data['rating'] + " "
+		print "msg : "+msg
 		self.sendData( msg )
 
 	def sendCabs( self ):
@@ -87,7 +87,7 @@ class AgencyInterface (threading.Thread):
 		for cid in cidList:
 			data = cabsDB.getCab( self.cursor, cid )
 			msg += data['cid'] + " " + data['c_model'] + " " + data['maxpassengers'] + " " + data['rating'] + " "
-		print "msg"+msg
+		print "msg : "+msg
 		self.sendData( msg )
 
 	def sendCidList(self):
@@ -116,6 +116,71 @@ class AgencyInterface (threading.Thread):
 		print msg
 		self.sendData(msg)
 	
+	def searchDrivers(self, msgList):
+		msg = ""
+		pattern = msgList[1]
+		dataList = driversDB.searchDrivers(self.cursor, pattern)
+		if dataList == None:
+			self.sendData(str(" "))
+			return
+		for data in dataList:
+			msg += data['did'] + " " + data['first_name'] + " " + data['last_name'] + " " + data['cid'] + " " + data['contact_number'] + " " + data['rating'] + " "
+		print msg
+		self.sendData(msg)
+	
+	def searchCabs(self, msgList):
+		msg = ""
+		pattern = msgList[1]
+		dataList = cabsDB.searchCabs(self.cursor, pattern)
+		if dataList == None:
+			self.sendData(str(" "))
+			return
+		for data in dataList:
+			msg += data['cid'] + " " + data['c_model'] + " " + data['maxpassengers'] + " " + data['rating'] + " "
+		print msg
+		self.sendData(msg)
+	
+	def sendRemainingCidList(self):
+		cidList = driversDB.getRemainingCidList(self.cursor)
+		msg = ""
+		for cid in cidList:
+			msg += str(cid) + " "
+		print msg
+		self.sendData(msg)
+	
+	def sendAllocationType(self, msgList):
+		aid = msgList[1]
+		data = allocationsDB.getAllocationType(self.cursor, aid)
+		self.sendData(data)
+	
+	def sendAllocationAddresses(self, msgList):
+		aid = msgList[1]
+		data = allocationsDB.getAllocation( self.cursor, aid )
+		eidList = data['eid']
+		eids = eidList.split(',')
+		msg = ""
+		for eid in eids:
+			data = employeeAddressDB.getEmployeeAddress(self.cursor, eid)
+			msg += data['house_num']+" "+data['street_name']+" "+data['city']+" "+data['postal_code']+" "
+		print msg
+		self.sendData(msg)
+	
+	def sendAllocatedDriver(self, msgList):
+		aid = msgList[1]
+		data = allocationsDB.getAllocation( self.cursor, aid )
+		did = data['did']
+		driver = driversDB.getDriver(self.cursor, did)
+		msg = driver['did']+" "+driver['first_name']+" "+driver['last_name']+" "+driver['contact_number']+" "+driver['rating']+" "
+		self.sendData(msg)
+	
+	def sendAllocatedCab(self, msgList):
+		aid = msgList[1]
+		data = allocationsDB.getAllocation( self.cursor, aid )
+		cid = data['cid']
+		cab = cabsDB.getCab(self.cursor, cid)
+		msg = cab['cid']+" "+cab['c_model']+" "+cab['maxpassengers']+" "+cab['rating']+" "
+		self.sendData(msg)
+		
 	def run( self ): #main entry point
 		try:
 			self.connectDB() #establish connection to database
@@ -145,41 +210,48 @@ class AgencyInterface (threading.Thread):
 				if msgList[0] == 'addcab' : #request to add an employee
 					print 'add cab'
 					self.addCab( msgList )
-					#self.sendData( "done" )
 				elif msgList[0] == 'adddriver' :
 					print 'add driver'
 					self.addDriver( msgList )
-					#self.sendData( "done" )
 				elif msgList[0] == 'sendcabs' :
 					print 'send cabs'
 					self.sendCabs()
-					#self.sendData( "done" )
 				elif msgList[0] == 'senddrivers':
 					print 'send drivers'
 					self.sendDrivers()
-					#self.sendData( "done" )
 				elif msgList[0] == 'sendallocations':
 					print 'get allocations'
 					self.sendAllocations()
-					#self.sendData("done")
-				elif msgList[0] == 'cabfeedback':
-					print'cabfeedback'
-					self.sendCabs()
-					#self.sendData("done")
-				elif msgList[0] == 'driverfeedback':
-					print  'driver feedback'
-					self.sendDrivers()
-					#self.sendData("done")
 				elif msgList[0] == 'sendcidlist':
 					print 'send cidlist'
 					self.sendCidList()
-					#self.sendData("done")
 				elif msgList[0] == 'sendavailablecidlist':
 					print 'send available cidlist'
 					self.sendAvailableCidList()
 				elif msgList[0] == 'allocatecab':
 					print 'allocate cab'
 					self.allocateCab(msgList)
+				elif msgList[0] == 'searchdrivers':
+					print 'search drivers'
+					self.searchDrivers(msgList)
+				elif msgList[0] == 'searchcabs':
+					print 'search cabs'
+					self.searchCabs(msgList)
+				elif msgList[0] == 'semdremainingcidlist' :
+					print 'send remaining cabs'
+					self.sendRemainingCidList()
+				elif msgList[0] == 'sendallocationaddresses':
+					print 'send allocation addresses'
+					self.sendAllocationAddresses(msgList)
+				elif msgList[0] == 'sendallocateddriver':
+					print 'send allocated driver'
+					self.sendAllocatedDriver(msgList)
+				elif msgList[0] == 'sendallocatedcab' :
+					print 'send allocated cab'
+					self.sendAllocatedCab(msgList)
+				elif msgList[0] == 'sendallocationtype':
+					print 'send allocation type'
+					self.sendAllocationType(msgList)
 				else :
 					return
 			##
