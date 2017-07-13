@@ -52,8 +52,8 @@ class CompanyInterface (threading.Thread):
 		msg = ""
 		for aid in aidList:
 			data = allocationsDB.getAllocation(self.cursor, aid)
-			employee = employeeDB.getEmployee( self.cursor, data['eid'] )
-			msg += data['aid'] + " " + employee['eid'] + " " +data['cid'] + " " + data['atime']+" "
+			#employee = employeeDB.getEmployee( self.cursor, data['eid'] )
+			msg += data['aid'] + " " + data['eid'] + " " +data['cid'] + " " + data['atime']+" "
 		print msg
 		self.sendData(msg)
 
