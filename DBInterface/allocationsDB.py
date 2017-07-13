@@ -66,7 +66,7 @@ def getAvailableCidList(cursor):
  	for row in rows :
  		data.append(row[0])
  	return data
- 	
+
 def getEid(cursor, aid):
 	sql = "select eid from allocations where aid=\"" + aid + "\" ; "
 	cursor.execute( sql )
@@ -112,3 +112,20 @@ def searchAllocations( cursor, aid ):
 	if cursor.rowcount() == 0 :
 		return False
 	return True
+
+def cancelAllocation( cursor, aid, eid ):
+	sql = "select eid from allocations where aid=\"" + aid + "\" "
+	cursor.execute( sql )
+	neweid=""
+	if cursor.rowcount == 0:
+		return None
+	row = cursor.fetchone()
+	eids = str( row[0] )
+	eidList=eids.split(',')
+	for each id in eidList:
+		if id!=eid:
+			neweid+=id+" "
+	print neweid
+	sql = "update allocations set eid ='"+neweid+"' where aid= '"+aid+"'"
+	cursor.execute( sql )
+	db.commit()
