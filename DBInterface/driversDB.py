@@ -8,7 +8,7 @@ def insertDriver( cursor, data ):
 			data['rating']		 	+ " ) "
 	cursor.execute( sql )
 
-def getDrivers( cursor, did ):
+def getDriver( cursor, did ):
 	sql = "select * from drivers where did=\"" + did + "\" ;"
 	data = { }
 	cursor.execute( sql )
@@ -23,6 +23,24 @@ def getDrivers( cursor, did ):
 	data['rating']			= str( row[5] )
 	return data
 
+def searchDrivers(cursor, pattern):
+	sql = "select * from drivers where fitst_name like \'%" + pattern + "%\' ; "
+	dataList = []
+	cursor.execute(sql)
+	rows = cursor.fetchall()
+	if cursor.rowcount == 0:
+		return None
+	for row in rows:
+		data = {}
+		data['did'] 			= str( row[0] )
+		data['first_name'] 		= str( row[1] )
+		data['last_name'] 		= str( row[2] )
+		data['cid'] 			= str( row[3] )
+		data['contact_number'] 	= str( row[4] )
+		data['rating']			= str( row[5] )
+		dataList.append(data)
+	return dataList
+
 def getRating( cursor, did):
 	sql= "select rating from drivers where did=\"" + did + "\" ;"
 	cursor.execute( sql )
@@ -31,7 +49,7 @@ def getRating( cursor, did):
 	row =cursor.fetchone()
 	return str( row[0] )
 
-def searchDrivers( cursor, did ):
+def searchDriver( cursor, did ):
 	sql = "select * from drivers where did=\"" + did + "\" ;"
 	cursor.execute( sql )
 	if cursor.rowcount == 0 :
@@ -45,6 +63,15 @@ def getCid( cursor, did ):
 		return None
 	row = cursor.fetchone()
 	return str( row[0] )
+
+def getRemainingCidList( cursor ):
+	sql = "select cabs.cid from cabs left join drivers on cabs.cid = drivers.cid where drivers.cid is null;"
+	cursor.execute(sql)
+ 	rows = cursor.fetchall()
+ 	data = []
+ 	for row in rows :
+ 		data.append(row[0])
+ 	return data
 
 def getDid( cursor, cid ):
 	sql = "select did from drivers where cid=\"" + cid + "\" ;"

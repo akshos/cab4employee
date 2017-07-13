@@ -27,6 +27,25 @@ def getAllocation( cursor, aid ):
 	data['iftaken']			= str( row[6] )
 	return data
 
+def getAllocations( cursor ):
+	sql = "select * from allocations;"
+	dataList = []
+	cursor.execute(sql)
+	if cursor.rowcount == 0:
+		return None
+	rows = cursor.fetchall()
+	for row in rows:
+		data = {}
+		data['aid'] 			= str( row[0] )
+		data['eid'] 			= str( row[1] )
+		data['cid'] 			= str( row[2] )
+		data['did'] 			= str( row[3] )
+		data['atime'] 			= str( row[4] )
+		data['change_flag'] 	= str( row[5] )
+		data['iftaken']			= str( row[6] )
+		dataList.append(data)
+	return dataList
+
 def deleteAllocation(cursor, aid):
 	sql = "delete from allocations where aid=\"" + aid + "\" ;"
 	cursor.execute( sql )

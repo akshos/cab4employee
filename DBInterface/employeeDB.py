@@ -28,6 +28,20 @@ def getEmployee( cursor, eid ):
 	data['time_out'] 	= str( row[7] )
 	return data
 
+def getTimeIn( cursor, eid ):
+	sql = "select time_in from employee where eid=\'"+eid+"\';"
+	cursor.execute(sql)
+	row = cursor.fetchone()
+	return str(row[0])
+
+def createEidWithTimeIn( cursor, startTime, endTime ):
+	sql = "create or replace view time_in_list as select eid from employee where time_in>\'"+startTime+"\' and time_in<\'"+endTime+"\' ;"
+	cursor.execute(sql);
+
+def createEidWithTimeOut( cursor, startTime, endTime ):
+	sql = "create or replace view time_out_list as select eid from employee where time_out>\'"+startTime+"\' and time_out<\'"+endTime+"\' ;"
+	cursor.execute(sql);
+	
 def searchEmployee( cursor, eid ):
 	sql = "select * from employee where eid=\"" + eid + "\" "
 	cursor.execute( sql )

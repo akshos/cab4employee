@@ -52,3 +52,21 @@ def getAllCid( cursor ):
 	for i in range ( 0, cursor.rowcount ):
 		data.append( cursor.fetchone()[0] )
 	return data
+
+def searchCabs(cursor, pattern):
+	sql = "select distinct * from cabs where cid like \'%" + pattern + "%\' ;"
+	cursor.execute(sql)
+	dataList = []
+	rows = cursor.fetchall()
+	if cursor.rowcount == 0:
+		return None
+	for row in rows:
+		data = {}
+		data['cid'] 			= str( row[0] )
+		data['c_model'] 		= str( row[1] )
+		data['maxpassengers'] 	= str( row[2] )
+		data['rating']			= str( row[3] )
+		dataList.append(data)
+	return dataList
+	
+	
