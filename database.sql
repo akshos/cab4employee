@@ -65,6 +65,7 @@ create table allocations (
 	atime time,
 	change_flag boolean,
 	iftaken boolean,
+	direction varchar(10),
 	primary key (aid)
 );
 

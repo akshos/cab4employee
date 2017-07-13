@@ -8,7 +8,8 @@ def insertAllocations( cursor, data ):
 			data['did'] 		+ "\" ,\"" 	+ 	\
 			data['atime'] 		+ "\" , " 	+ 	\
 			data['change_flag'] + " , "		+ 	\
-			data['iftaken'] 	+ ") "
+			data['iftaken'] 	+ " , \""	+	\
+			data['direction']  	+ "\" ); "
 	cursor.execute( sql )
 
 def getAllocation( cursor, aid ):
@@ -25,6 +26,7 @@ def getAllocation( cursor, aid ):
 	data['atime'] 			= str( row[4] )
 	data['change_flag'] 	= str( row[5] )
 	data['iftaken']			= str( row[6] )
+	data['direction']		= str( row[7] )
 	return data
 
 def getAllocations( cursor ):
@@ -43,6 +45,7 @@ def getAllocations( cursor ):
 		data['atime'] 			= str( row[4] )
 		data['change_flag'] 	= str( row[5] )
 		data['iftaken']			= str( row[6] )
+		data['direction']		= str( row[7] )
 		dataList.append(data)
 	return dataList
 
@@ -95,6 +98,7 @@ def getEmpAllocations( cursor, eid ):
 	data['atime'] 			= str( row[4] )
 	data['change_flag'] 	= str( row[5] )
 	data['iftaken']			= str( row[6] )
+	data['direction']		= str( row[7] )
 	return data
 
 
