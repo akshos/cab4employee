@@ -33,7 +33,7 @@ class EmployeeInterface (threading.Thread):
 		self.eid = loginDB.authenticate( self.cursor, self.username, password, self.loginType )
 		del self.msgList
 
-	def getDetails( self, msgList ):
+	def getDetails( self):
 		empdata = employeeDB.getEmployee( self.cursor, self.eid)
 		msg = self.eid + " " + empdata['first_name'] + " " + empdata['last_name']
 		#cabid drivername time of pickup location of pickup
@@ -41,17 +41,36 @@ class EmployeeInterface (threading.Thread):
 		self.sendData(msg)
 
 	def getCabDetails( self ):
-		allocationdata = allocationsDB.getEmpAllocations(self.cursor, self.eid)
-		driver = driversDB.getDrivers(self.cursor, allocationsDB['did'])
-		#msg = allocationdata['cid'] + " " + driver['first_name'] + " " + driver['last_name'] +" "+ allocationdata['atime']+" "+#employeeDB.getEmploye(allocationdata['eid'])[]
+		allallocations = allocationsDB.getAllocations(self.cursor)
+		aid=None
+		for allocation in allallocations:
+			eids=allocation['eid'].split(',')
+			for eid in eids:
+				if eid==self.eid:
+					aid=allocation['aid']
+		allocationdata = allocationsDB.getAllocation(self.cursor, aid)
+		driver = driversDB.getDriver(self.cursor, allocationdata['did'])
+		msg = allocationdata['cid'] + " " + driver['first_name'] +" "+ driver['last_name'] +" "+driver['contact_number']+" "+allocationdata['atime']
+		#employeeDB.getEmploye(allocationdata['eid'])[]
 		print msg
 		self.sendData(msg)
 
 	def changePassword( self, msgList ):
-		print 'change password'
+		print 'changing password..................'
+		return loginDB.changePassword(self.cursor, self.eid, msgList[1])
 
-	def changeAllocationTime(self, msgList):
-		print 'change allocation'
+	def cancelAllocation(self, msgList):
+		print 'changing allocation................'
+		allallocations = allocationsDB.getAllocations(self.cursor)
+		aid=None
+		for allocation in allallocations:
+			eids=allocation['eid'].split(',')
+			for eid in eids:
+				if eid==self.eid:
+					aid=allocation['aid']
+		return allocationsDB.cancelAllocation(self.cursor, aid, eid)
+
+
 
 	def sendFeedback(self,msgList):
 		allocationdata=allocationsDB.getEmpAllocations(self.cursor, self.eid)
@@ -99,15 +118,18 @@ class EmployeeInterface (threading.Thread):
 					self.sendData( "done" )
 				elif msgList[0] == 'changepassword' :
 					print 'change password'
-					self.changePassword(msgList)
-					self.sendData( "done" )
+					a=self.changePassword(msgList)
+					if a==1:
+						self.sendData( "done" )
+					else:
+						self.sendData( "failed" )
 				elif msgList[0] == 'feedback':
 					print 'send drivers'
 					self.sendFeedback(msgList)
 					self.sendData( "done" )
 				elif msgList[0] == 'changetime':
 					print'get allocations'
-					self.changeAllocationTime(msgList)
+					self.cancelAllocation(msgList)
 					self.sendData("done")
 				elif msgList[0] == 'stop':
 					print 'stop'

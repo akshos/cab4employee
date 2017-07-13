@@ -122,7 +122,7 @@ def cancelAllocation( cursor, aid, eid ):
 	row = cursor.fetchone()
 	eids = str( row[0] )
 	eidList=eids.split(',')
-	for each id in eidList:
+	for id in eidList:
 		if id!=eid:
 			neweid+=id+" "
 	print neweid
