@@ -32,17 +32,20 @@ class EmployeeInterface (threading.Thread):
 		password = self.msgList[3]
 		self.eid = loginDB.authenticate( self.cursor, self.username, password, self.loginType )
 		del self.msgList
-		
-	def getDetails( self ):
+
+	def getDetails( self, msgList ):
 		empdata = employeeDB.getEmployee( self.cursor, self.eid)
 		msg = self.eid + " " + empdata['first_name'] + " " + empdata['last_name']
+		#cabid drivername time of pickup location of pickup
 		print msg
 		self.sendData(msg)
-        
+
 	def getCabDetails( self ):
 		allocationdata = allocationsDB.getEmpAllocations(self.cursor, self.eid)
 		driver = driversDB.getDrivers(self.cursor, allocationsDB['did'])
-		msg = self.eid + " " + allocationdata['aid'] + " " + allocationdata['cid'] + " " + allocationdata['']
+		msg = allocationdata['cid'] + " " + driver['first_name'] + " " + driver['last_name'] +" "+ allocationdata['atime']+" "+#employeeDB.getEmploye(allocationdata['eid'])[]
+		print msg
+		self.sendData(msg)
 
 	def changePassword( self, msgList ):
 		print 'change password'
@@ -65,12 +68,12 @@ class EmployeeInterface (threading.Thread):
 			self.connectDB() #establish connection to database
 			self.login() #attempt authentication
 			if self.eid == None : #if authentication failed
-				print 'login failed : agency interface'
+				print 'login failed : employee interface'
 				self.sendData("failed")	#send response that failed
 				return #stop the thread due to login failure
 			else :
 				print 'sending done'
-				self.sendData("done")
+				self.getDetails();
 				#sendAllocations()
 				print 'sent'  #send a login accepted message
 
@@ -86,16 +89,16 @@ class EmployeeInterface (threading.Thread):
 				msgList = self.msg.split()
 				if len( msgList ) == 0:
 					return
-				if msgList[0] == 'idreq' : #request to add an employee
+				if msgList[0] == 'idreq' : #no use
 					print 'id request'
-					self.getDetails()
+					self.getDetails( msgList )
 					self.sendData( "done" )
 				elif msgList[0] == 'cabdetails' :
 					print 'cab details'
 					self.getCabDetails()
 					self.sendData( "done" )
 				elif msgList[0] == 'changepassword' :
-					print 'send cabs'
+					print 'change password'
 					self.changePassword(msgList)
 					self.sendData( "done" )
 				elif msgList[0] == 'feedback':
@@ -106,6 +109,9 @@ class EmployeeInterface (threading.Thread):
 					print'get allocations'
 					self.changeAllocationTime(msgList)
 					self.sendData("done")
+				elif msgList[0] == 'stop':
+				print 'stop'
+				self.sendData("hello")
 				else :
 					return
 			##
