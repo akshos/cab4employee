@@ -43,7 +43,7 @@ class EmployeeInterface (threading.Thread):
 	def getCabDetails( self ):
 		allocationdata = allocationsDB.getEmpAllocations(self.cursor, self.eid)
 		driver = driversDB.getDrivers(self.cursor, allocationsDB['did'])
-		msg = allocationdata['cid'] + " " + driver['first_name'] + " " + driver['last_name'] +" "+ allocationdata['atime']+" "+#employeeDB.getEmploye(allocationdata['eid'])[]
+		#msg = allocationdata['cid'] + " " + driver['first_name'] + " " + driver['last_name'] +" "+ allocationdata['atime']+" "+#employeeDB.getEmploye(allocationdata['eid'])[]
 		print msg
 		self.sendData(msg)
 
@@ -110,8 +110,8 @@ class EmployeeInterface (threading.Thread):
 					self.changeAllocationTime(msgList)
 					self.sendData("done")
 				elif msgList[0] == 'stop':
-				print 'stop'
-				self.sendData("hello")
+					print 'stop'
+					self.sendData("hello")
 				else :
 					return
 			##

@@ -69,15 +69,16 @@ class CompanyInterface (threading.Thread):
 
 	def sendExtraDetails(self,aid):
 		allocation=allocationsDB.getAllocation(self.cursor, aid)
-		eidList=allocation.split(',')
+		eidList=allocation['eid'].split(',')
 		employeedetails=""
+		print eidList
 		for eid in eidList:
-			employee=employeeDB.getEmployee(self.cursor,eid)
+			data=employeeDB.getEmployee(self.cursor,eid)
 			address=employeeAddressDB.getEmployeeAddress(self.cursor,eid)
-			employeedetails+=data['eid']+" "+data['first_name']+" "+data['last_name']+" "+data['date_of_reg']+" "+data['contact_num']+" "+data['account_id']+" "+data['time_in']+" "+data['time_out']+" "+address['house_num']+" "+ address['street_name']+" "+address['city']+" "+address['postal_code']+" "
+			employeedetails += data['eid']+" "+data['first_name']+" "+data['last_name']+" "+data['date_of_reg']+" "+data['contact_num']+" "+data['account_id']+" "+data['time_in']+" "+data['time_out']+" "+address['house_num']+" "+ address['street_name']+" "+address['city']+" "+address['postal_code']+" "
 		cab=cabsDB.getCab(self.cursor,allocation['cid'])
-		cabdetails=cab['cid']+" "+cab['c_model']+" "+cab[m'maxpassengers']
-		driver=driversDB.getDrivers(self.cursor,allocation['did'])
+		cabdetails=cab['cid']+" "+cab['c_model']+" "+cab['maxpassengers']
+		driver=driversDB.getDriver(self.cursor,allocation['did'])
 		driverdetails=driver['did']+" "+driver['first_name']+" "+driver['last_name']+" "+driver['contact_number']+" "+driver['rating']
 		msg=cabdetails+" "+driverdetails+" "+employeedetails
 		self.sendData(msg)	
@@ -138,7 +139,7 @@ class CompanyInterface (threading.Thread):
 					self.sendData("done")
 				elif msgList[0] == 'extra':#request for extra allocaton details
 					print 'send extra details'
-					self.sendExtraDetails(msgList)
+					self.sendExtraDetails(msgList[1])
 					self.sendData("done")
 				else :
 					return
