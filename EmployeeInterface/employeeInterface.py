@@ -53,11 +53,17 @@ class EmployeeInterface (threading.Thread):
 			self.sendData("empty")
 		else:
 			allocationdata = allocationsDB.getAllocation(self.cursor, aid)
-			driver = driversDB.getDriver(self.cursor, allocationdata['did'])
-			msg = allocationdata['cid'] + " " + driver['first_name'] +" "+ driver['last_name'] +" "+driver['contact_number']+" "+allocationdata['atime']
-			#employeeDB.getEmploye(allocationdata['eid'])[]
-			print msg
-			self.sendData(msg)
+			did=allocationdata['did']
+			cid = allocationdata['cid']
+			print allocationdata
+			if did != "None" and cid != "None":
+				driver = driversDB.getDriver(self.cursor, did)
+				msg = cid + " " + driver['first_name'] +" "+ driver['last_name'] +" "+driver['contact_number']+" "+allocationdata['atime']
+				#employeeDB.getEmploye(allocationdata['eid'])[]
+				print msg
+				self.sendData(msg)
+			else :
+				self.sendData("empty")
 			self.sendData("done")
 
 	def changePassword( self, msgList ):
