@@ -48,16 +48,22 @@ class EmployeeInterface (threading.Thread):
 			for eid in eids:
 				if eid==self.eid:
 					aid=allocation['aid']
-		allocationdata = allocationsDB.getAllocation(self.cursor, aid)
-		driver = driversDB.getDriver(self.cursor, allocationdata['did'])
-		msg = allocationdata['cid'] + " " + driver['first_name'] +" "+ driver['last_name'] +" "+driver['contact_number']+" "+allocationdata['atime']
-		#employeeDB.getEmploye(allocationdata['eid'])[]
-		print msg
-		self.sendData(msg)
+		if aid == None:
+			print "empty"
+			self.sendData("empty")
+		else:
+			allocationdata = allocationsDB.getAllocation(self.cursor, aid)
+			driver = driversDB.getDriver(self.cursor, allocationdata['did'])
+			msg = allocationdata['cid'] + " " + driver['first_name'] +" "+ driver['last_name'] +" "+driver['contact_number']+" "+allocationdata['atime']
+			#employeeDB.getEmploye(allocationdata['eid'])[]
+			print msg
+			self.sendData(msg)
+			self.sendData("done")
 
 	def changePassword( self, msgList ):
 		print 'changing password..................'
-		return loginDB.changePassword(self.cursor, self.eid, msgList[1])
+		uname=employeeDB.getEmployee(self.cursor,self.eid)['username']
+		return loginDB.changePassword(self.cursor, uname, msgList[1])
 
 	def cancelAllocation(self, msgList):
 		print 'changing allocation................'
@@ -68,18 +74,26 @@ class EmployeeInterface (threading.Thread):
 			for eid in eids:
 				if eid==self.eid:
 					aid=allocation['aid']
-		return allocationsDB.cancelAllocation(self.cursor, aid, eid)
+		return allocationsDB.cancelAllocation(self.cursor, aid, self.eid)
 
 
 
 	def sendFeedback(self,msgList):
-		allocationdata=allocationsDB.getEmpAllocations(self.cursor, self.eid)
+		allallocations = allocationsDB.getAllocations(self.cursor)
+		aid=None
+		for allocation in allallocations:
+			eids=allocation['eid'].split(',')
+			for eid in eids:
+				if eid==self.eid:
+					aid=allocation['aid']
+		allocationdata=allocationsDB.getAllocation(self.cursor, aid)
 		cabdata=cabsDB.getCab(self.cursor , allocationdata['cid'])
-		driverdata=driversDB(self.cursor, allocationdata['did'])
-		cabrating=(cabdata['rating']+msgList[1])/2
-		cabsDB.setRating(self.cursor, cabrating)
-		driverrating=(driverdata['rating']+msgList[2])/2
-		driversDB.setRating(self.cursor, driverrating)
+		driverdata=driversDB.getDriver(self.cursor, allocationdata['did'])
+		cabrating=(float(cabdata['rating'])+float(msgList[3]))/2
+		cabsDB.setRating(self.cursor, cabrating, allocationdata['cid'])
+		driverrating=(float(driverdata['rating'])+(float(msgList[2])+float(msgList[1]))/2)/2
+		driversDB.setRating(self.cursor, driverrating, allocationdata['did'])
+		self.db.commit();
 		#include adding comments to database as msgList[3]
 
 	def run( self ): #main entry point
@@ -115,10 +129,11 @@ class EmployeeInterface (threading.Thread):
 				elif msgList[0] == 'cabdetails' :
 					print 'cab details'
 					self.getCabDetails()
-					self.sendData( "done" )
+
 				elif msgList[0] == 'changepassword' :
 					print 'change password'
 					a=self.changePassword(msgList)
+					self.db.commit()
 					if a==1:
 						self.sendData( "done" )
 					else:
@@ -127,9 +142,10 @@ class EmployeeInterface (threading.Thread):
 					print 'send drivers'
 					self.sendFeedback(msgList)
 					self.sendData( "done" )
-				elif msgList[0] == 'changetime':
+				elif msgList[0] == 'cancel':
 					print'get allocations'
 					self.cancelAllocation(msgList)
+					self.db.commit()
 					self.sendData("done")
 				elif msgList[0] == 'stop':
 					print 'stop'

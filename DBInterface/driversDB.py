@@ -96,3 +96,7 @@ def getAllDid( cursor ):
 	for i in range ( 0, cursor.rowcount ):
 		data.append( cursor.fetchone()[0] )
 	return data
+
+def setRating(cursor, rate, did):
+	sql="update drivers set rating ='"+str(rate)+"'where did='"+did+"'"
+	cursor.execute(sql)

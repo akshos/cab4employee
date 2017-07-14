@@ -7,8 +7,8 @@ def insertEmployee( cursor, data ):
 			data['contact_num'] + "   , \"" + 	\
 			data['account_id']  + "\" , \""	+ 	\
 			data['time_in'] 	+ "\" , \""	+ 	\
-			data['username']	+ "\" , \"" +	\
-			data['time_out'] 	+ "\" ) "
+			data['time_out']	+ "\" , \"" +	\
+			data['username'] 	+ "\" ) "
 	cursor.execute( sql )
 
 def getEmployee( cursor, eid ):
@@ -26,6 +26,8 @@ def getEmployee( cursor, eid ):
 	data['account_id'] 	= str( row[5] )
 	data['time_in']		= str( row[6] )
 	data['time_out'] 	= str( row[7] )
+	data['username']	= str( row[8] )
+
 	return data
 
 def getTimeIn( cursor, eid ):
@@ -41,7 +43,7 @@ def createEidWithTimeIn( cursor, startTime, endTime ):
 def createEidWithTimeOut( cursor, startTime, endTime ):
 	sql = "create or replace view time_out_list as select eid from employee where time_out>\'"+startTime+"\' and time_out<\'"+endTime+"\' ;"
 	cursor.execute(sql);
-	
+
 def searchEmployee( cursor, eid ):
 	sql = "select * from employee where eid=\"" + eid + "\" "
 	cursor.execute( sql )
