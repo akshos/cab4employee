@@ -7,7 +7,7 @@ class CarPool:
 	def __init__(self):
 		self.currentTime = datetime.datetime.now().time()
 		self.connectDB()
-		self.advanceTime = 14
+		self.advanceTime = 10
 
 	def connectDB( self ): #connect to the sql database and create cursor object
 		self.db = DBConnection.DBConnection("localhost", "cab4employee", "", "cab4employee")
@@ -119,11 +119,11 @@ class CarPool:
 	
 	def createTimeOutAllocations(self):
 		allocationID = "AL" + datetime.datetime.now().strftime('%Y%m%d%H%M')
-		postalCodes = employeeAddressDB.getTimeInPostalCodes(self.cursor)
+		postalCodes = employeeAddressDB.getTimeOutPostalCodes(self.cursor)
 		aidCount = 0
 		print postalCodes
 		for code in postalCodes:
-			eidList = employeeAddressDB.getTimeInEidList( self.cursor, code )
+			eidList = employeeAddressDB.getTimeOutEidList( self.cursor, code )
 			eidlen = len(eidList)
 			count = ( eidlen/4 )
 			if eidlen%4 != 0:
@@ -145,8 +145,8 @@ class CarPool:
 				data['atime'] = self.getPickupTime( 'drop' )
 				data['change_flag'] = "0"
 				data['iftaken'] = "0"
-				data['direction'] = "pickup"
-				#allocationsDB.insertAllocations( self.cursor, data )
+				data['direction'] = "drop"
+				allocationsDB.insertAllocations( self.cursor, data )
 				print str(data)
 				self.db.commit()
 	
@@ -155,6 +155,7 @@ class CarPool:
 		self.createTimeInView()
 		self.createTimeOutView()
 		self.createTimeInAllocations()
+		self.createTimeOutAllocations()
 		return
 		
 

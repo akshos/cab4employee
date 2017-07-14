@@ -103,8 +103,17 @@ class AgencyInterface (threading.Thread):
 		cid = msgList[2]
 		status = allocationsDB.modifyCid( self.cursor, aid, cid )
 		if( status == True ):
-			self.db.commit()
-			self.sendData("success")
+			did = driversDB.getDidFromCid( self.cursor, cid )
+			if did == None:
+				self.sendData("fail")
+				return
+			status = allocationsDB.modifyDid( self.cursor, aid, did )
+			if status == True :
+				self.db.commit()
+				self.sendData("success")
+				return
+			else :
+				self.sendData("fail")
 		else:
 			self.sendData("fail")
 	
@@ -181,6 +190,15 @@ class AgencyInterface (threading.Thread):
 		msg = cab['cid']+" "+cab['c_model']+" "+cab['maxpassengers']+" "+cab['rating']+" "
 		self.sendData(msg)
 		
+	def deallocateCab(self, msgList):
+		aid = msgList[1]
+		status = allocationsDB.resetCidDid( self.cursor, aid )
+		if status == True:
+			self.sendData("success")
+			self.db.commit()
+		else:
+			self.sendData("fail")
+	
 	def run( self ): #main entry point
 		try:
 			self.connectDB() #establish connection to database
@@ -231,6 +249,9 @@ class AgencyInterface (threading.Thread):
 				elif msgList[0] == 'allocatecab':
 					print 'allocate cab'
 					self.allocateCab(msgList)
+				elif msgList[0] == 'deallocatecab':
+					print 'deallocate cab'
+					self.deallocateCab( msgList )
 				elif msgList[0] == 'searchdrivers':
 					print 'search drivers'
 					self.searchDrivers(msgList)

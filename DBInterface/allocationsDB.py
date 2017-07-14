@@ -61,8 +61,15 @@ def modifyCid(cursor, aid, cid):
 		return False
 	return True
 
+def modifyDid(cursor, aid, did):
+	sql = "update allocations set did=\"" + did + "\" where aid=\"" + aid + "\" ;" 
+	cursor.execute(sql)
+	if cursor.rowcount == 0:
+		return False
+	return True
+
 def getAvailableCidList(cursor):
-	sql = "select cabs.cid from cabs left join allocations on cabs.cid = allocations.cid where allocations.cid is null;"
+	sql = "select cabs.cid from cabs left join allocations on cabs.cid = allocations.cid, drivers where allocations.cid is null and cabs.cid = drivers.cid;"
  	cursor.execute(sql)
  	rows = cursor.fetchall()
  	data = []
@@ -123,6 +130,17 @@ def getAllocationType(cursor, aid):
 	row = cursor.fetchone()
 	data = str( row[0] )
 	return data
+
+def resetCidDid(cursor, aid):
+	sql = "update allocations set cid=\"None\" where aid=\"" + aid + "\" ;"
+	cursor.execute(sql)
+	if cursor.rowcount == 0:
+		return False
+	sql = "update allocations set did=\"None\" where aid=\"" + aid + "\" ;"
+	cursor.execute(sql)
+	if cursor.rowcount == 0:
+		return False
+	return True
 
 def cancelAllocation( cursor, aid, eid ):
 	sql = "select eid from allocations where aid=\"" + aid + "\" "

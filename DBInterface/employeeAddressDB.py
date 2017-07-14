@@ -67,7 +67,16 @@ def getTimeOutPostalCodes( cursor ):
 	for row in rows:
 		data.append( str(row[0] ) )
 	return data
-	
+
+def getTimeOutEidList( cursor, postalCode ):
+	sql = "select eid from time_out_address where postal_code=\'"+postalCode+"\';"
+	cursor.execute(sql)
+	data = []
+	rows = cursor.fetchall()
+	for row in rows:
+		data.append( str(row[0] ) )
+	return data
+
 def getEidListWithPostalCode(cursor, postalCode):
 	sql = "select eid from employee_address where postal_code=\"" + postalCode + "\" ;"
 	data = []

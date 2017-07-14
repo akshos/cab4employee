@@ -64,6 +64,14 @@ def getCid( cursor, did ):
 	row = cursor.fetchone()
 	return str( row[0] )
 
+def getDidFromCid( cursor, cid ):
+	sql = "select did from drivers where cid=\"" + cid + "\" ;"
+	cursor.execute( sql )
+	if cursor.rowcount == 0:
+		return None
+	row = cursor.fetchone()
+	return str( row[0] )
+
 def getRemainingCidList( cursor ):
 	sql = "select cabs.cid from cabs left join drivers on cabs.cid = drivers.cid where drivers.cid is null;"
 	cursor.execute(sql)
