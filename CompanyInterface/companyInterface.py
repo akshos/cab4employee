@@ -3,16 +3,17 @@ from DBInterface import DBConnection, loginDB, employeeDB, allocationsDB, employ
 
 class CompanyInterface (threading.Thread):
 
-	def __init__( self, clientConnection, msgList ):
+	def __init__( self, clientConnection, msgList, db ):
 		threading.Thread.__init__(self)
 		self.type = "Company Interface"
 		self.loginType = "admin"
 		self.clientConnection = clientConnection
 		self.msgList = msgList
+		self.db = db
 
 	def connectDB( self ): #connect to the sql database and create cursor object
-		self.db = DBConnection.DBConnection("localhost", "cab4employee", "", "cab4employee")
-		self.db.connect()
+		#self.db = DBConnection.DBConnection("localhost", "cab4employee", "", "cab4employee")
+		#self.db.connect()
 		self.cursor = self.db.getCursor()
 
 	def sendData(self, data ):
@@ -66,7 +67,7 @@ class CompanyInterface (threading.Thread):
 		for i in range( 1, len(msgList) ):
 			allocationsDB.deleteAllocation(self.cursor,msgList[i])
 		self.db.commit()
-
+		
 	def sendExtraDetails(self,aid):
 		allocation=allocationsDB.getAllocation(self.cursor, aid)
 		eidList=allocation['eid'].split(',')
@@ -92,6 +93,24 @@ class CompanyInterface (threading.Thread):
 			msg += data['eid']+" "+data['first_name']+" "+data['last_name']+" "+data['date_of_reg']+" "+data['contact_num']+" "+data['account_id']+" "+data['time_in']+" "+data['time_out']+" "
 		print msg
 		self.sendData(msg)
+
+	def sendDrivers( self ):
+		didList = driversDB.getAllDid(self.cursor)
+		msg = ""
+		for did in didList:
+			data = driversDB.getDriver( self.cursor, did )
+			msg += data['did'] + " " + data['first_name'] + " " + data['last_name'] + " " + data['cid'] + " " + data['contact_number'] + " " + data['rating'] + " "
+		print "msg : "+msg
+		self.sendData( msg )
+
+	def sendCabs( self ):
+		cidList = cabsDB.getAllCid(self.cursor)
+		msg = ""
+		for cid in cidList:
+			data = cabsDB.getCab( self.cursor, cid )
+			msg += data['cid'] + " " + data['c_model'] + " " + data['maxpassengers'] + " " + data['rating'] + " "
+		print "msg : "+msg
+		self.sendData( msg )
 
 	def run( self ): #main entry point
 		try:
@@ -141,6 +160,12 @@ class CompanyInterface (threading.Thread):
 					print 'send extra details'
 					self.sendExtraDetails(msgList[1])
 					self.sendData("done")
+				elif msgList[0] == 'senddrivers':
+					print 'send drivers'
+					self.sendDrivers()
+				elif msgList[0] == 'sendcabs':
+					print 'send cabs'
+					self.sendCabs()
 				else :
 					return
 			##

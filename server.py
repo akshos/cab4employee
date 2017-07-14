@@ -2,18 +2,22 @@ import socket
 from CompanyInterface import companyInterface
 from AgencyInterface import agencyInterface
 from EmployeeInterface import employeeInterface
+from DBInterface import DBConnection
 
 threadList = []
+
+db = DBConnection.DBConnection("localhost", "cab4employee", "", "cab4employee")
+db.connect()
 
 def server():
 	serverSocket = socket.socket()
 	serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 	serverSocket.setsockopt( socket.IPPROTO_TCP, socket.TCP_NODELAY, 1 )
 	#serverSocket.setsockopt( socket.SOL_SOCKET, socket.SO_SNDBUF, 100 )
-	host = "192.168.2.33"
+	host = "192.168.1.7"
 	port = 2345
 	serverSocket.bind( (host,port) )
-	
+	global db
 	try:
 		while True:
 			global threadList
@@ -27,9 +31,9 @@ def server():
 			interfaceType = msgList[0]
 			print "interface type : ", interfaceType
 			if interfaceType == 'companyinterface': #spawn a thread for each client
-				clientThread = companyInterface.CompanyInterface( clientConnection, msgList ).start()
+				clientThread = companyInterface.CompanyInterface( clientConnection, msgList, db ).start()
 			elif interfaceType == 'agencyinterface':
-				clientThread = agencyInterface.AgencyInterface( clientConnection, msgList ).start()
+				clientThread = agencyInterface.AgencyInterface( clientConnection, msgList, db ).start()
 			elif interfaceType == 'employeeinterface':
 				clientThread = employeeInterface.EmployeeInterface( clientConnection, msgList ).start()
 			else :
