@@ -60,14 +60,17 @@ class CompanyInterface (threading.Thread):
 
 	def searchEmployee( self, msgList ):
 		data=employeeDB.getEmployee( self.cursor, msgList[1])
-		msg = data['eid']+" "+data['first_name']+" "+data['last_name']+" "+data['contact_num']+" "+data['account_id']+" "+data['time_in']+" "+data['time_out']
-		self.sendData(msg)
+		if data!=None:
+			msg = data['eid']+" "+data['first_name']+" "+data['last_name']+" "+data['contact_num']+" "+data['account_id']+" "+data['time_in']+" "+data['time_out']
+			self.sendData(msg)
+		else:
+			self.sendData("notfound")
 
 	def rejectAllocation( self, msgList ):
 		for i in range( 1, len(msgList) ):
 			allocationsDB.deleteAllocation(self.cursor,msgList[i])
 		self.db.commit()
-		
+
 	def sendExtraDetails(self,aid):
 		allocation=allocationsDB.getAllocation(self.cursor, aid)
 		eidList=allocation['eid'].split(',')
@@ -82,7 +85,7 @@ class CompanyInterface (threading.Thread):
 		driver=driversDB.getDriver(self.cursor,allocation['did'])
 		driverdetails=driver['did']+" "+driver['first_name']+" "+driver['last_name']+" "+driver['contact_number']+" "+driver['rating']
 		msg=cabdetails+" "+driverdetails+" "+employeedetails
-		self.sendData(msg)	
+		self.sendData(msg)
 
 	def sendEmployeeList(self):
 		eidList = employeeDB.getAllEid(self.cursor)
