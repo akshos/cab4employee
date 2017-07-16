@@ -11,15 +11,18 @@ class EmployeeInterface (threading.Thread):
 		self.msgList = msgList
 
 	def connectDB( self ): #connect to the sql database and create cursor object
-		self.db = DBConnection.DBConnection("localhost", "cab4employee", "", "cab4employee")
+		self.db = DBConnection.DBConnection("localhost", "root", "", "cab4employee")
 		self.db.connect()
 		self.cursor = self.db.getCursor()
 
 	def sendData(self, data ):
+		print "sending:"+data;
 		self.clientConnection.send( data + '\n' )
 
 	def receiveData( self ):
-		return self.clientConnection.recv(1024)
+		data=self.clientConnection.recv(1024)
+		print "recieved:"+data;
+		return data
 
 	def disconnect( self ):
 		self.clientConnection.close()
@@ -31,6 +34,7 @@ class EmployeeInterface (threading.Thread):
 		self.username = self.msgList[2]
 		password = self.msgList[3]
 		self.eid = loginDB.authenticate( self.cursor, self.username, password, self.loginType )
+		#self.eid="e01"
 		del self.msgList
 
 	def getDetails( self):
@@ -74,13 +78,13 @@ class EmployeeInterface (threading.Thread):
 			print allocationdata
 			if did != "None" and cid != "None":
 				driver = driversDB.getDriver(self.cursor, did)
-				msg = cid + " " + driver['first_name'] +" "+ driver['last_name'] +" "+driver['contact_number']+" "+allocationdata['atime']
+				msg = "cabdetails "+cid + " " + driver['first_name'] +" "+ driver['last_name'] +" "+driver['contact_number']+" "+allocationdata['atime']
 				#employeeDB.getEmploye(allocationdata['eid'])[]
 				print msg
 				self.sendData(msg)
 			else :
 				self.sendData("empty")
-			self.sendData("done")
+			#self.sendData("done")
 
 	def changePassword( self, msgList ):
 		print 'changing password..................'
@@ -147,28 +151,28 @@ class EmployeeInterface (threading.Thread):
 				if msgList[0] == 'idreq' : #no use
 					print 'id request'
 					self.getDetails( msgList )
-					self.sendData( "done" )
+					#self.sendData( "done" )
 				elif msgList[0] == 'cabdetails' :
 					print 'cab details'
 					self.getCabDetails()
-
+					#self.sendData("cabdetails C01 fname lname 9999999999 12:00:00")
 				elif msgList[0] == 'changepassword' :
 					print 'change password'
 					a=self.changePassword(msgList)
 					self.db.commit()
 					if a==1:
-						self.sendData( "done" )
+						self.sendData( "donechangepassword" )
 					else:
-						self.sendData( "failed" )
+						self.sendData( "failedchangepassword" )
 				elif msgList[0] == 'feedback':
 					print 'send drivers'
 					self.sendFeedback(msgList)
-					self.sendData( "done" )
+					self.sendData( "donefeedback" )
 				elif msgList[0] == 'cancel':
 					print'get allocations'
 					self.cancelAllocation(msgList)
 					self.db.commit()
-					self.sendData("done")
+					self.sendData("donecancel")
 				elif msgList[0] == 'stop':
 					print 'stop'
 					self.sendData("hello")
@@ -179,7 +183,7 @@ class EmployeeInterface (threading.Thread):
 			##
 #		except IntegrityError as e:
 #			self.sendData("EC1")
-#		except :
-#			print 'something wrong'
+		except :
+			print 'something wrong'
 		finally:
 			self.disconnect() # disconnect when leaving thread
