@@ -14,7 +14,7 @@ def server():
 	serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 	serverSocket.setsockopt( socket.IPPROTO_TCP, socket.TCP_NODELAY, 1 )
 	#serverSocket.setsockopt( socket.SOL_SOCKET, socket.SO_SNDBUF, 100 )
-	host = "192.168.1.7"
+	host = "192.168.2.33"
 	port = 2345
 	serverSocket.bind( (host,port) )
 	global db
@@ -35,7 +35,7 @@ def server():
 			elif interfaceType == 'agencyinterface':
 				clientThread = agencyInterface.AgencyInterface( clientConnection, msgList, db ).start()
 			elif interfaceType == 'employeeinterface':
-				clientThread = employeeInterface.EmployeeInterface( clientConnection, msgList ).start()
+				clientThread = employeeInterface.EmployeeInterface( clientConnection, msgList, db ).start()
 			else :
 				clientConnection.close()
 			if clientThread != None:

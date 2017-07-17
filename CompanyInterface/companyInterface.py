@@ -59,8 +59,9 @@ class CompanyInterface (threading.Thread):
 		self.sendData(msg)
 
 	def searchEmployee( self, msgList ):
-		data=employeeDB.getEmployee( self.cursor, msgList[1])
-		if data!=None:
+		data = employeeDB.getEmployee( self.cursor, msgList[1])
+		print data
+		if data != None:
 			msg = data['eid']+" "+data['first_name']+" "+data['last_name']+" "+data['contact_num']+" "+data['account_id']+" "+data['time_in']+" "+data['time_out']
 			self.sendData(msg)
 		else:

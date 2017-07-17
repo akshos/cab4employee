@@ -3,16 +3,17 @@ from DBInterface import DBConnection, loginDB, employeeDB, allocationsDB, cabsDB
 
 class EmployeeInterface (threading.Thread):
 
-	def __init__( self, clientConnection, msgList ):
+	def __init__( self, clientConnection, msgList, db ):
 		threading.Thread.__init__(self)
 		self.type = "Employee Interface"
 		self.loginType = "emp"
 		self.clientConnection = clientConnection
 		self.msgList = msgList
+		self.db = db
 
 	def connectDB( self ): #connect to the sql database and create cursor object
-		self.db = DBConnection.DBConnection("localhost", "cab4employee", "", "cab4employee")
-		self.db.connect()
+		#self.db = DBConnection.DBConnection("localhost", "cab4employee", "", "cab4employee")
+		#self.db.connect()
 		self.cursor = self.db.getCursor()
 
 	def sendData(self, data ):

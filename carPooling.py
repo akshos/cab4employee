@@ -7,7 +7,7 @@ class CarPool:
 	def __init__(self):
 		self.currentTime = datetime.datetime.now().time()
 		self.connectDB()
-		self.advanceTime = 10
+		self.advanceTime = 2
 
 	def connectDB( self ): #connect to the sql database and create cursor object
 		self.db = DBConnection.DBConnection("localhost", "cab4employee", "", "cab4employee")
@@ -58,12 +58,12 @@ class CarPool:
 		startmn = 0
 		endhr = 0
 		endmn = 0
-		if mn >= 0 and mn < 30:
+		if mn >= 30 and mn < 59:
 			starthr = hr-1
 			startmn = 45
 			endhr = hr
 			endmn = 15
-		elif mn >= 30 and mn < 59:
+		elif mn >= 0 and mn < 30:
 			starthr = hr
 			startmn = 15
 			endhr = hr
