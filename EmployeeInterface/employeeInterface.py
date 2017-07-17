@@ -36,7 +36,23 @@ class EmployeeInterface (threading.Thread):
 
 	def getDetails( self):
 		empdata = employeeDB.getEmployee( self.cursor, self.eid)
-		msg = self.eid + " " + empdata['first_name'] + " " + empdata['last_name']
+		msg = self.eid + " " + empdata['first_name'] + " " + empdata['last_name'] +" "
+		allallocations = allocationsDB.getAllocations(self.cursor)
+		aid=None
+		for allocation in allallocations:
+			eids=allocation['eid'].split(',')
+			for eid in eids:
+				if eid==self.eid:
+					aid=allocation['aid']
+		if aid != None:
+			allocationdata = allocationsDB.getAllocation(self.cursor, aid)
+			msg+="1 "
+			if allocationdata['direction']=="pickup":
+				msg+="pickup "+empdata['time_in']
+			else :
+				msg+="drop "+empdata['time_out']
+		else:
+			msg+="0 0 0"
 		#cabid drivername time of pickup location of pickup
 		print msg
 		self.sendData(msg)
