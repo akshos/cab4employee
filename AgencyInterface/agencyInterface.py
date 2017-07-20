@@ -43,15 +43,15 @@ class AgencyInterface (threading.Thread):
 		cabsDB.insertCab( self.cursor, self.db, data )
 		self.sendData("done")
 
-	def sendCabs( self ):
-		cidList = cabsDB.getAllCid(self.cursor)
-		msg = ""
-		for cid in cidList:
-			data = getCab( self.cursor, cid)
-			msg += data[0] + " " + data[1] + " " + data[2] + " "
-		print msg
-		self.sendData(msg)
-
+#	def sendCabs( self ):
+#		cidList = cabsDB.getAllCid(self.cursor)
+#		msg = ""
+#		for cid in cidList:
+#			data = cabsDB.getCab( self.cursor, cid)
+#			msg += data[0] + " " + data[1] + " " + data[2] + " "
+#		print msg
+#		self.sendData(msg)
+	
 	def addDriver( self, msgList ):
 		data = {}
 		data['did'] 			= msgList[1]
@@ -90,6 +90,14 @@ class AgencyInterface (threading.Thread):
 			msg += data['cid'] + " " + data['c_model'] + " " + data['maxpassengers'] + " " + data['rating'] + " "
 		print "msg : "+msg
 		self.sendData( msg )
+	
+	def sendCab(self, msgList):
+		cid = msgList[1]
+		msg = ""
+		data = cabsDB.getCab( self.cursor, cid)
+		msg += data['cid'] + " " + data['c_model'] + " " + data['maxpassengers'] + " "
+		print msg
+		self.sendData(msg)
 
 	def sendCidList(self):
 		cidList = cabsDB.getCidList(self.cursor)
@@ -200,6 +208,38 @@ class AgencyInterface (threading.Thread):
 		else:
 			self.sendData("fail")
 	
+	def removeCab(self, msgList):
+		cid = msgList[1]
+		status = cabsDB.removeCab( self.cursor, cid )
+		if status == True:
+			status = driversDB.resetCab( self.cursor, cid )
+			if status == True: 
+				self.sendData("done")
+				self.db.commit()
+		else:
+			self.sendData("fail")
+	
+	def modifyCab(self, msgList):
+		data = {}
+		data['cid'] = msgList[1]
+		data['model'] = msgList[2]
+		data['maxpassengers'] = msgList[3]
+		status = cabsDB.modifyCab( self.cursor, data )
+		if status == True:
+			self.sendData("done")
+			self.db.commit()
+		else:
+			self.sendData("fail")
+	
+	def removeDriver(self, msgList):
+		did = msgList[1]
+		status = driversDB.removeDriver(self.cursor, did)
+		if status == True:
+			self.sendData("done")
+			self.db.commit()
+		else:
+			self.sendData("fail")
+
 	def run( self ): #main entry point
 		try:
 			self.connectDB() #establish connection to database
@@ -235,6 +275,9 @@ class AgencyInterface (threading.Thread):
 				elif msgList[0] == 'sendcabs' :
 					print 'send cabs'
 					self.sendCabs()
+				elif msgList[0] == 'sendcab':
+					print 'send cab'
+					self.sendCab(msgList)
 				elif msgList[0] == 'senddrivers':
 					print 'send drivers'
 					self.sendDrivers()
@@ -274,6 +317,15 @@ class AgencyInterface (threading.Thread):
 				elif msgList[0] == 'sendallocationtype':
 					print 'send allocation type'
 					self.sendAllocationType(msgList)
+				elif msgList[0] == 'removecab':
+					print 'remove cab'
+					self.removeCab(msgList)
+				elif msgList[0] == 'modifycab':
+					print 'modify cab'
+					self.modifyCab(msgList)
+				elif msgList[0] == 'removedriver':
+					print 'remove driver'
+					self.removeDriver(msgList)
 				else :
 					return
 			##

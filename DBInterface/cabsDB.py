@@ -1,3 +1,4 @@
+
 def insertCab( cursor, db, data ):
 	sql = "insert into cabs values(\"" + \
 			data['cid']				+ "\" ,\"" + 	\
@@ -26,6 +27,23 @@ def searchCab( cursor, cid ):
 	if cursor.rowcount == 0 :
 		return False
 	return True
+
+def removeCab( cursor, cid ):
+	sql = "delete from cabs where cid=\"" + cid + "\" "
+	cursor.execute( sql )
+	if cursor.rowcount == 1:
+		return True
+	return False		
+
+def modifyCab( cursor, data ):
+	cid = data['cid']
+	model = data['model']
+	maxpassengers = data['maxpassengers']
+	sql = "update cabs set c_model=\""+model+"\", maxpassengers="+maxpassengers+" where cid=\""+cid+"\" "
+	cursor.execute(sql)
+	if cursor.rowcount == 1:
+		return True
+	return False
 
 def getCidList(cursor):
 	sql = "select * from cabs;"

@@ -56,6 +56,21 @@ def searchDriver( cursor, did ):
 		return False
 	return True
 
+def removeDriver(cursor, did):
+	sql = "delete from drivers where did=\"" + did + "\" "
+	cursor.execute(sql)
+	if cursor.rowcount == 0:
+		return False
+	return True
+
+def resetCab( cursor, cid ):
+	sql = "update drivers set cid=\"None\" where cid=\"" + cid + "\" "
+	cursor.execute( sql )
+	if cursor.rowcount == 1:
+		return True
+	else:
+		return False
+
 def getCid( cursor, did ):
 	sql = "select cid from drivers where did=\"" + did + "\" ;"
 	cursor.execute( sql )

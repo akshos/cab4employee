@@ -7,7 +7,7 @@ class CarPool:
 	def __init__(self):
 		self.currentTime = datetime.datetime.now().time()
 		self.connectDB()
-		self.advanceTime = 2
+		self.advanceTime = 8
 
 	def connectDB( self ): #connect to the sql database and create cursor object
 		self.db = DBConnection.DBConnection("localhost", "cab4employee", "", "cab4employee")
