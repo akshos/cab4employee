@@ -80,6 +80,14 @@ create table allocations_history (
 	primary key (aid)
 );
 
+create table requests (
+	eid varchar(20),
+	req_date date,
+	time_in	time,
+	time_out time
+	primary key(eid, req_date)
+);
+
 Employee Table
 
 insert into employee values('emp01','Gokul','Santosh','03-05-01','9677332189','acc01','09:00:00','18:00:00','gokulsan');
