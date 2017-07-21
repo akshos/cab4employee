@@ -3,16 +3,15 @@ from DBInterface import DBConnection, loginDB, employeeDB, allocationsDB, cabsDB
 
 class EmployeeInterface (threading.Thread):
 
-	def __init__( self, clientConnection, msgList ):
+	def __init__( self, clientConnection, msgList, db ):
 		threading.Thread.__init__(self)
 		self.type = "Employee Interface"
 		self.loginType = "emp"
 		self.clientConnection = clientConnection
 		self.msgList = msgList
+		self.db = db
 
 	def connectDB( self ): #connect to the sql database and create cursor object
-		self.db = DBConnection.DBConnection("localhost", "root", "", "cab4employee")
-		self.db.connect()
 		self.cursor = self.db.getCursor()
 
 	def sendData(self, data ):
@@ -129,7 +128,7 @@ class EmployeeInterface (threading.Thread):
 			if self.eid == None : #if authentication failed
 				print 'login failed : employee interface'
 				self.sendData("failed")	#send response that failed
-				return #stop the thread due to login failure
+				#return #stop the thread due to login failure
 			else :
 				print 'sending done'
 				self.getDetails();

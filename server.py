@@ -15,7 +15,7 @@ def server():
 	serverSocket.setsockopt( socket.IPPROTO_TCP, socket.TCP_NODELAY, 1 )
 	#serverSocket.setsockopt( socket.SOL_SOCKET, socket.SO_SNDBUF, 100 )
 	host = "192.168.2.33"
-	port = 2345d							
+	port = 2345							
 	serverSocket.bind( (host,port) )
 	global db
 	try:
@@ -24,10 +24,28 @@ def server():
 			clientThread = None
 			serverSocket.listen(5)
 			clientConnection, clientAddress = serverSocket.accept()
-			print "received request from : ", clientAddress
+			print "received connection from : ", clientAddress
+#			msg = str( clientConnection.recv(1024) )
+#			print 'Recieved initial message : ' + msg
+#			msgList = msg.split()
+#			interfaceType = msgList[0]
+#			print "interface type : ", interfaceType
+#			if interfaceType == 'companyinterface': #spawn a thread for each client
+#				clientThread = companyInterface.CompanyInterface( clientConnection, msgList, db ).start()
+#			elif interfaceType == 'agencyinterface':
+#				clientThread = agencyInterface.AgencyInterface( clientConnection, msgList, db ).start()
+#			elif interfaceType == 'employeeinterface':
+#				clientThread = employeeInterface.EmployeeInterface( clientConnection, msgList, db ).start()
+#			else :
+#				clientConnection.close()
+#			if clientThread != None:
+#				threadList.append( clientThread )
 			msg = str( clientConnection.recv(1024) )
 			print 'Recieved initial message : ' + msg
 			msgList = msg.split()
+			if len(msgList) == 0:
+				print 'Blank request..'
+				clientConnection.close()
 			interfaceType = msgList[0]
 			print "interface type : ", interfaceType
 			if interfaceType == 'companyinterface': #spawn a thread for each client
@@ -37,27 +55,11 @@ def server():
 			elif interfaceType == 'employeeinterface':
 				clientThread = employeeInterface.EmployeeInterface( clientConnection, msgList, db ).start()
 			else :
+				print 'invalid interface type'
 				clientConnection.close()
 			if clientThread != None:
 				threadList.append( clientThread )
-			while True:
-				msg = str( clientConnection.recv(1024) )
-				print 'Recieved initial message : ' + msg
-				msgList = msg.split()
-				interfaceType = msgList[0]
-				print "interface type : ", interfaceType
-				if len(msgList)==4:
-					if interfaceType == 'companyinterface': #spawn a thread for each client
-						clientThread = companyInterface.CompanyInterface( clientConnection, msgList, db ).start()
-					elif interfaceType == 'agencyinterface':
-						clientThread = agencyInterface.AgencyInterface( clientConnection, msgList, db ).start()
-					elif interfaceType == 'employeeinterface':
-						clientThread = employeeInterface.EmployeeInterface( clientConnection, msgList ).start()
-					else :
-						clientConnection.close()
-					if clientThread != None:
-						threadList.append( clientThread )
-					break
+#				break
 	except KeyboardInterrupt:
 		raise
 	#except:

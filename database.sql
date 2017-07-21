@@ -156,22 +156,22 @@ Employee Address
 eid, house_num, street_name, postal_code(int), city
 insert into employee_address values( '', '', '', , '' )
 
-insert into employee_address values('emp01', 'TC_44/1661_URA Lane', 'Eastfort', 'Trivandrum', 695023 );
+insert into employee_address values('emp01', 'TC_44/1661_URA_Lane', 'Eastfort', 'Trivandrum', 695023 );
 insert into employee_address values('emp02', 'GA-01_PD_ROAD', 'Eastfort', 'Trivandrum', 695023 );
-insert into employee_address values('emp03', 'RAJA_BHAVAN -01', 'Eastfort', 'Trivandrum', 695023 );
+insert into employee_address values('emp03', 'RAJA_BHAVAN-01', 'Eastfort', 'Trivandrum', 695023 );
 insert into employee_address values('emp04', 'Estate_Road', 'Pappanamcode', 'Trivandrum', 695018 );
 insert into employee_address values('emp05', 'Kovil_Road', 'Pappanamcode', 'Trivandrum', 695018 );
 insert into employee_address values('emp06', 'Manvila_Foundation', 'Pmg Jn', 'Trivandrum', 695033 );
 insert into employee_address values('emp07', 'IB_towers_road', 'Pappanamcode', 'Trivandrum', 695018 );
 insert into employee_address values('emp08', 'TC_55/1983_Residency', 'Nemom', 'Trivandrum', 695020 );
-insert into employee_address values('emp09', 'Arcade Residency', 'SS_kovil_road', 'Trivandrum', 695001 );
+insert into employee_address values('emp09', 'Arcade_Residency', 'SS_kovil_road', 'Trivandrum', 695001 );
 insert into employee_address values('emp10', 'Flat_14_b(Pe)_heera', 'Ullor', 'Trivandrum', 695011 );
-insert into employee_address values('emp11', 'Annas Arcade', 'SS_kovil_road', 'Trivandrum', 695001);
+insert into employee_address values('emp11', 'Annas_Arcade', 'SS_kovil_road', 'Trivandrum', 695001);
 insert into employee_address values('emp12', 'GOVT_HOST_ROAD', 'Thycaud', 'Trivandrum', 695014);
 insert into employee_address values('emp13', 'Flat_3_a(Pe)_heera', 'Ullor', 'Trivandrum', 695011 );
 insert into employee_address values('emp14', 'Opp_Brigade_lane', 'Ullor', 'Trivandrum', 695011 );
 insert into employee_address values('emp15', 'Amabala_agency_street', 'Nemom', 'Trivandrum', 695020 );
-insert into employee_address values('emp16','Mascot_Hotel_lane', 'Pmg Jn', 'Trivandrum', 695033 );
+insert into employee_address values('emp16', 'Mascot_Hotel_lane', 'Pmg Jn', 'Trivandrum', 695033 );
 insert into employee_address values('emp17', 'Police_Quaters-palayam', 'Pmg Jn', 'Trivandrum', 695033 );
 insert into employee_address values('emp18', 'Opp_Thycaud_P.O', 'Thycaud', 'Trivandrum', 695014);
 insert into employee_address values('emp19', 'Aryanivas_lane', 'SS_kovil_road', 'Trivandrum', 695001);
