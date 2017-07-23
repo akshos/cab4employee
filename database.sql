@@ -83,9 +83,9 @@ create table allocations_history (
 create table requests (
 	eid varchar(20),
 	req_date date,
-	time_in	time,
+	time_in time,
 	time_out time,
-	primary key (eid req_date)
+	constraint pk_request primary key (eid,req_date)
 );
 
 Employee Table
