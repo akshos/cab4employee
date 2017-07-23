@@ -63,6 +63,18 @@ def removeDriver(cursor, did):
 		return False
 	return True
 
+def modifyDriver(cursor, data):
+	did = data['did']
+	first_name = data['first_name']
+	last_name = data['last_name']
+	cid = data['cid']
+	contact = data['contact_number']
+	sql = "update drivers set first_name=\""+first_name+"\", last_name=\""+last_name+"\", cid=\""+cid+"\", contact_number=\""+contact+"\" where did=\""+did+"\" "
+	cursor.execute(sql)
+	if cursor.rowcount == 0:
+		return False
+	return True
+
 def resetCab( cursor, cid ):
 	sql = "update drivers set cid=\"None\" where cid=\"" + cid + "\" "
 	cursor.execute( sql )
@@ -86,6 +98,20 @@ def getDidFromCid( cursor, cid ):
 		return None
 	row = cursor.fetchone()
 	return str( row[0] )
+
+def getDriverFromCid(cursor, cid):
+	sql = "select * from drivers where cid=\"" + cid + "\" ;"
+	cursor.execute(sql)
+	if cursor.rowcount == 0:
+		return None
+	data = {}
+	row = cursor.fetchone()
+	data['did'] 			= str(row[0])
+	data['first_name'] 		= str(row[1])
+	data['last_name'] 		= str(row[2])
+	data['cid'] 			= str(row[3])
+	data['contact_number'] 	= str(row[4])
+	return data
 
 def getRemainingCidList( cursor ):
 	sql = "select cabs.cid from cabs left join drivers on cabs.cid = drivers.cid where drivers.cid is null;"
