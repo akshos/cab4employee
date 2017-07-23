@@ -115,7 +115,28 @@ class CompanyInterface (threading.Thread):
 			msg += data['cid'] + " " + data['c_model'] + " " + data['maxpassengers'] + " " + data['rating'] + " "
 		print "msg : "+msg
 		self.sendData( msg )
+	
+	def searchEmployeeName(self, msgList):
+		pattern = msgList[1]
+		employees = employeeDB.searchEmployeeName(self.cursor, pattern)
+		if employees == None:
+			self.sendData("None")
+		msg = ""
+		for emp in employees:
+			msg += emp['eid']+" "+emp['first_name']+" "+emp['last_name']+" "+emp['date_of_reg']+" "+emp['contact_num']+" "+emp['account_id']+" "+emp['time_in']+" "+emp['time_out']+" "+emp['username']+" " 
+		self.sendData(msg)
 
+	def deallocateCab(self, msgList):
+		aid = msgList[1]
+		status = allocationsDB.resetCidDid( self.cursor, aid )
+		if status == True:
+			status = allocationsDB.setChangeFlag( self.cursor, aid )
+			if status == True:
+				self.sendData("success")
+				self.db.commit()
+			else:
+				self.sendData("fail")
+		
 	def run( self ): #main entry point
 		try:
 			self.connectDB() #establish connection to database
@@ -170,6 +191,12 @@ class CompanyInterface (threading.Thread):
 				elif msgList[0] == 'sendcabs':
 					print 'send cabs'
 					self.sendCabs()
+				elif msgList[0] == 'searchemployeename':
+					print 'search employee name'
+					self.searchEmployeeName(msgList)
+				elif msgList[0] == 'deallocatecab':
+					print 'deallocate cab'
+					self.deallocateCab( msgList )
 				else :
 					return
 			##

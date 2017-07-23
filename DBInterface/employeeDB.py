@@ -27,8 +27,28 @@ def getEmployee( cursor, eid ):
 	data['time_in']		= str( row[6] )
 	data['time_out'] 	= str( row[7] )
 	data['username']	= str( row[8] )
-
 	return data
+
+def searchEmployeeName(cursor, pattern):
+	sql = "select * from employee where first_name like \'%"+pattern+"%\' "
+	dataList = []
+	cursor.execute(sql)
+	if cursor.rowcount == 0:
+		return None
+	rows = cursor.fetchall()
+	for row in rows:
+		data = {}
+		data['eid'] 		= str( row[0] )
+		data['first_name'] 	= str( row[1] )
+		data['last_name'] 	= str( row[2] )
+		data['date_of_reg'] = str( row[3] )
+		data['contact_num'] = str( row[4] )
+		data['account_id'] 	= str( row[5] )
+		data['time_in']		= str( row[6] )
+		data['time_out'] 	= str( row[7] )
+		data['username']	= str( row[8] )
+		dataList.append(data)
+	return dataList	
 
 def getTimeIn( cursor, eid ):
 	sql = "select time_in from employee where eid=\'"+eid+"\';"
@@ -37,11 +57,17 @@ def getTimeIn( cursor, eid ):
 	return str(row[0])
 
 def createEidWithTimeIn( cursor, startTime, endTime ):
-	sql = "create or replace view time_in_list as select eid from employee where time_in>\'"+startTime+"\' and time_in<\'"+endTime+"\' ;"
+	sql = "create or replace view time_in_list as select employee.eid \
+			from employee, present_requests where employee.time_in>\'"+startTime+"\' \
+			and employee.time_in<\'"+endTime+"\' and employee.eid<>present_requests.eid \
+			UNION select eid from present_requests where time_in<\'"+endTime+"\' and time_in>\'"+startTime+"\' ;" 	
 	cursor.execute(sql);
 
 def createEidWithTimeOut( cursor, startTime, endTime ):
-	sql = "create or replace view time_out_list as select eid from employee where time_out>\'"+startTime+"\' and time_out<\'"+endTime+"\' ;"
+	sql = "create or replace view time_out_list as select employee.eid \
+			from employee, present_requests  where employee.time_out>\'"+startTime+"\' \
+			and employee.time_out<\'"+endTime+"\' and employee.eid<>present_requests.eid \
+			UNION select eid from present_requests where time_out<\'"+endTime+"\' and time_out>\'"+startTime+"\' ; "
 	cursor.execute(sql);
 
 def searchEmployee( cursor, eid ):

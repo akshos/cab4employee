@@ -68,8 +68,15 @@ def modifyDid(cursor, aid, did):
 		return False
 	return True
 
+def checkCidAllocated(cursor, cid):
+	sql = "select * from allocations where cid=\""+cid+"\" "
+	cursor.execute(sql)
+	if cursor.rowcount == 1:
+		return True
+	return False
+
 def getAvailableCidList(cursor):
-	sql = "select cabs.cid from cabs left join allocations on cabs.cid = allocations.cid, drivers where allocations.cid is null and cabs.cid = drivers.cid;"
+	sql = "select cabs.cid from cabs left join allocations on cabs.cid = allocations.cid, drivers where allocations.cid is null and cabs.cid = drivers.cid and drivers.rating>1 and cabs.rating>1"
  	cursor.execute(sql)
  	rows = cursor.fetchall()
  	data = []
@@ -82,6 +89,13 @@ def getEid(cursor, aid):
 	cursor.execute( sql )
 	data = cursor.fetchone()[0]
 	return data
+
+def setChangeFlag(cursor, aid):
+	sql = "update allocations set change_flag=1 where aid=\""+aid+"\" "
+	cursor.execute( sql )
+	if cursor.rowcount == 0:
+		return False
+	return True
 
 def getTimeCid(cursor, aid):
 	sql = "select atime,cid from allocations where aid=\"" + aid + "\" ;"

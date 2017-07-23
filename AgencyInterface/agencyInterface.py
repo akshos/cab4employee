@@ -40,8 +40,14 @@ class AgencyInterface (threading.Thread):
 		data['c_model'] 		= msgList[2]
 		data['maxpassengers'] 	= msgList[3]
 		data['rating'] 			= "5"
-		cabsDB.insertCab( self.cursor, self.db, data )
-		self.sendData("done")
+		checkData = cabsDB.getCab(self.cursor, data['cid'])
+		if checkData == None:
+			cabsDB.insertCab( self.cursor, self.db, data )
+			self.db.commit()
+			self.sendData("done")
+		else:
+			self.sendData("existing")
+			
 
 #	def sendCabs( self ):
 #		cidList = cabsDB.getAllCid(self.cursor)
@@ -60,9 +66,13 @@ class AgencyInterface (threading.Thread):
 		data['cid'] 			= msgList[4]
 		data['contact_number'] 	= msgList[5]
 		data['rating'] 			= "5"
-		driversDB.insertDriver( self.cursor, data )
-		self.db.commit()
-		self.sendData("done")
+		checkData = driversDB.getDriver(self.cursor, data['did'])
+		if checkData == None:
+			driversDB.insertDriver( self.cursor, data )
+			self.db.commit()
+			self.sendData("done")
+		else:
+			self.sendData("existing")
 
 	def sendAllocations( self ):
 		dataList = allocationsDB.getAllocations( self.cursor )
@@ -81,6 +91,14 @@ class AgencyInterface (threading.Thread):
 			msg += data['did'] + " " + data['first_name'] + " " + data['last_name'] + " " + data['cid'] + " " + data['contact_number'] + " " + data['rating'] + " "
 		print "msg : "+msg
 		self.sendData( msg )
+
+	def sendDriver(self, msgList):
+		did = msgList[1]
+		msg = ""
+		data = driversDB.getDriver( self.cursor, did )
+		msg += data['did'] + " " + data['first_name'] + " " + data['last_name'] + " " + data['cid'] + " " + data['contact_number'] + " " + data['rating']
+		print "msg : " + msg
+		self.sendData(msg)	
 
 	def sendCabs( self ):
 		cidList = cabsDB.getAllCid(self.cursor)
@@ -107,9 +125,18 @@ class AgencyInterface (threading.Thread):
 		print msg
 		self.sendData(msg)
 	
+	def checkCidAllocated(self, msgList):
+		cid = msgList[1]
+		status = allocationsDB.checkCidAllocated(self.cursor, cid)
+		if status == True:
+			self.sendData("yes")
+		else:
+			self.sendData("no")
+	
 	def allocateCab(self, msgList):
 		aid = msgList[1]
 		cid = msgList[2]
+		pcid = msgList[3]
 		status = allocationsDB.modifyCid( self.cursor, aid, cid )
 		if( status == True ):
 			did = driversDB.getDidFromCid( self.cursor, cid )
@@ -117,6 +144,7 @@ class AgencyInterface (threading.Thread):
 				self.sendData("fail")
 				return
 			status = allocationsDB.modifyDid( self.cursor, aid, did )
+			status = allocationsDB.setChangeFlag( self.cursor, aid )
 			if status == True :
 				self.db.commit()
 				self.sendData("success")
@@ -203,10 +231,12 @@ class AgencyInterface (threading.Thread):
 		aid = msgList[1]
 		status = allocationsDB.resetCidDid( self.cursor, aid )
 		if status == True:
-			self.sendData("success")
-			self.db.commit()
-		else:
-			self.sendData("fail")
+			status = allocationsDB.setChangeFlag( self.cursor, aid )
+			if status == True:
+				self.sendData("success")
+				self.db.commit()
+			else:
+				self.sendData("fail")
 	
 	def removeCab(self, msgList):
 		cid = msgList[1]
@@ -231,15 +261,42 @@ class AgencyInterface (threading.Thread):
 		else:
 			self.sendData("fail")
 	
+	def modifyDriver(self, msgList):
+		data = {}
+		data['did'] = msgList[1]
+		data['first_name'] = msgList[2]
+		data['last_name'] = msgList[3]
+		data['cid'] = msgList[4]
+		data['contact_number'] = msgList[5]
+		status = driversDB.modifyDriver(self.cursor, data)
+		if status == True:
+			self.sendData("done")
+			self.db.commit()
+		else:
+			self.sendData("fail")
+	
 	def removeDriver(self, msgList):
 		did = msgList[1]
+		driver = driversDB.getDriver(self.cursor, did)
+		if float(driver['rating']) <= 1 :
+			self.sendData("flagged")
+			return
 		status = driversDB.removeDriver(self.cursor, did)
 		if status == True:
 			self.sendData("done")
 			self.db.commit()
 		else:
 			self.sendData("fail")
-
+		
+	def getDriverFromCid(self, msgList):
+		cid = msgList[1]
+		data = driversDB.getDriverFromCid(self.cursor, cid)
+		if data != None:
+			msg = data['did']+" "+data['first_name']+" "+data['last_name']+" "+data['cid']+" "+data['contact_number']
+			self.sendData(msg)
+		else:
+			self.sendData("failed")
+		
 	def run( self ): #main entry point
 		try:
 			self.connectDB() #establish connection to database
@@ -278,6 +335,9 @@ class AgencyInterface (threading.Thread):
 				elif msgList[0] == 'sendcab':
 					print 'send cab'
 					self.sendCab(msgList)
+				elif msgList[0] == 'senddriver':
+					print 'send driver'
+					self.sendDriver(msgList)
 				elif msgList[0] == 'senddrivers':
 					print 'send drivers'
 					self.sendDrivers()
@@ -326,6 +386,15 @@ class AgencyInterface (threading.Thread):
 				elif msgList[0] == 'removedriver':
 					print 'remove driver'
 					self.removeDriver(msgList)
+				elif msgList[0] == 'modifydriver':
+					print 'modify driver'
+					self.modifyDriver(msgList)
+				elif msgList[0] == 'checkcidallocated':
+					print 'check cid allocated'
+					self.checkCidAllocated(msgList)
+				elif msgList[0] == 'getdriverfromcid':
+					print 'get driver from cid'
+					self.getDriverFromCid(msgList)
 				else :
 					return
 			##

@@ -23,3 +23,8 @@ def removeRequest( cursor, db, eid ,req_date):
 		return True
 	return False
 	db.commit()
+
+def createPresentRequests(cursor, presentDate):
+	sql = "create or replace view present_requests as select * from requests where req_date=\""+presentDate+"\" "
+	cursor.execute(sql)
+	

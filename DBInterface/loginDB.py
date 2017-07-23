@@ -24,6 +24,6 @@ def authenticate( cursor, username, password, logintype ):
 	eid = ''
 	if cursor.rowcount == 0 :
 		return None
-	if logintype == 'admin' or logintype == 'emp':
+	if logintype == 'emp':
 		eid = employeeDB.getEidFromUsername( cursor, username )
 	return eid

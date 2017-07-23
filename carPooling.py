@@ -1,4 +1,4 @@
-from DBInterface import DBConnection, employeeDB, employeeAddressDB, allocationsDB
+from DBInterface import DBConnection, employeeDB, employeeAddressDB, allocationsDB, requestDB
 import threading
 import datetime
 
@@ -7,7 +7,7 @@ class CarPool:
 	def __init__(self):
 		self.currentTime = datetime.datetime.now().time()
 		self.connectDB()
-		self.advanceTime = 8
+		self.advanceTime = 1
 
 	def connectDB( self ): #connect to the sql database and create cursor object
 		self.db = DBConnection.DBConnection("localhost", "cab4employee", "", "cab4employee")
@@ -58,12 +58,12 @@ class CarPool:
 		startmn = 0
 		endhr = 0
 		endmn = 0
-		if mn >= 30 and mn < 59:
+		if mn >= 0 and mn < 30:
 			starthr = hr-1
 			startmn = 45
 			endhr = hr
 			endmn = 15
-		elif mn >= 0 and mn < 30:
+		elif mn >= 30 and mn < 59:
 			starthr = hr
 			startmn = 15
 			endhr = hr
@@ -76,6 +76,11 @@ class CarPool:
 		employeeAddressDB.createTimeOutAddress( self.cursor )
 		self.db.commit()
 	
+	def createPresentRequests(self):
+		presentDate = datetime.datetime.now().strftime('%Y-%m-%d')
+		print 'present date ' + presentDate
+		requestDB.createPresentRequests(self.cursor, str(presentDate) )
+			
 	def getPickupTime(self, direction):
 		hr = self.searchTime.hour
 		if direction == 'pickup':
@@ -152,6 +157,8 @@ class CarPool:
 	
 	def doAllocations(self):
 		self.setSearchTime()	
+		print 'Search time : ' + str(self.searchTime)
+		self.createPresentRequests()
 		self.createTimeInView()
 		self.createTimeOutView()
 		self.createTimeInAllocations()
