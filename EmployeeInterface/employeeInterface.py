@@ -128,7 +128,7 @@ class EmployeeInterface (threading.Thread):
 			if self.eid == None : #if authentication failed
 				print 'login failed : employee interface'
 				self.sendData("failed")	#send response that failed
-				#return #stop the thread due to login failure
+				return #stop the thread due to login failure
 			else :
 				print 'sending done'
 				self.getDetails();
