@@ -1,5 +1,6 @@
 import threading
-from DBInterface import DBConnection, loginDB, employeeDB, allocationsDB, cabsDB, driversDB
+import datetime
+from DBInterface import DBConnection, loginDB, employeeDB, allocationsDB, cabsDB, driversDB,requestDB
 
 class EmployeeInterface (threading.Thread):
 
@@ -122,6 +123,26 @@ class EmployeeInterface (threading.Thread):
 		self.db.commit();
 		#include adding comments to database as msgList[3]
 
+	def addRequest(self,msgList):
+		startdate=msgList[2].split('/')
+		enddate=msgList[3].split('/')
+		print(str(startdate[0])+" "+str(startdate[1])+" "+str(startdate[2]))
+		date1 = datetime.date(int(startdate[0]),int(startdate[1]),int(startdate[2]))
+		date2 = datetime.date(int(enddate[0]),int(enddate[1]),int(enddate[2]))
+		day = datetime.timedelta(days=1)
+		print (str(date1)+" "+str(date2)+" ")
+		data={}
+		while date1 <= date2:
+			data['eid']=self.eid
+			data['req_date']=str(date1)
+			data['time_in']=msgList[4]
+			data['time_out']=msgList[5]
+			print("add")
+			requestDB.addRequest(self.cursor, self.db, data)
+			self.db.commit()
+			date1 = date1 + day
+		self.db.commit()
+
 	def run( self ): #main entry point
 		try:
 			self.connectDB() #establish connection to database
@@ -173,6 +194,10 @@ class EmployeeInterface (threading.Thread):
 					self.cancelAllocation(msgList)
 					self.db.commit()
 					self.sendData("donecancel")
+				elif msgList[0] == 'request':
+					print'request'
+					self.addRequest(msgList)
+					self.sendData("donerequest")
 				elif msgList[0] == 'stop':
 					print 'stop'
 					self.sendData("hello")
