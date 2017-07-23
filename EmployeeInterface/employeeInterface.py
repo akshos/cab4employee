@@ -46,7 +46,8 @@ class EmployeeInterface (threading.Thread):
 			for eid in eids:
 				if eid==self.eid:
 					aid=allocation['aid']
-		if aid != None:
+					cid=allocation['cid']
+		if aid != None and cid != None:
 			allocationdata = allocationsDB.getAllocation(self.cursor, aid)
 			msg+="1 "
 			if allocationdata['direction']=="pickup":
@@ -77,7 +78,7 @@ class EmployeeInterface (threading.Thread):
 			print allocationdata
 			if did != "None" and cid != "None":
 				driver = driversDB.getDriver(self.cursor, did)
-				msg = "cabdetails "+cid + " " + driver['first_name'] +" "+ driver['last_name'] +" "+driver['contact_number']+" "+allocationdata['atime']
+				msg = "cabdetails "+cid + " " + driver['first_name'] +" "+ driver['last_name'] +" "+driver['contact_number']+" "+allocationdata['atime']+" "+allocationdata['change_flag']
 				#employeeDB.getEmploye(allocationdata['eid'])[]
 				print msg
 				self.sendData(msg)
@@ -182,7 +183,7 @@ class EmployeeInterface (threading.Thread):
 			##
 #		except IntegrityError as e:
 #			self.sendData("EC1")
-		except :
-			print 'something wrong'
+#		except :
+#			print 'something wrong'
 		finally:
 			self.disconnect() # disconnect when leaving thread
