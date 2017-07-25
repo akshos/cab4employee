@@ -50,6 +50,28 @@ def searchEmployeeName(cursor, pattern):
 		dataList.append(data)
 	return dataList	
 
+def getEmployeeFull(cursor, eid):
+	sql = "select * from employee natural join employee_address"
+	cursor.execute(sql)
+	if cursor.rowcount == 0:
+		return None
+	row = cursor.fetchone()
+	data = {}
+	data['eid'] 		= str( row[0] )
+	data['first_name'] 	= str( row[1] )
+	data['last_name'] 	= str( row[2] )
+	data['date_of_reg'] = str( row[3] )
+	data['contact_num'] = str( row[4] )
+	data['account_id'] 	= str( row[5] )
+	data['time_in']		= str( row[6] )
+	data['time_out'] 	= str( row[7] )
+	data['username']	= str( row[8] )
+	data['house_num'] 	= str( row[9] )
+	data['street_name']	= str( row[10] )
+	data['city']		= str( row[11] )
+	data['postal_code'] = str( row[12] )	
+	return data
+
 def getTimeIn( cursor, eid ):
 	sql = "select time_in from employee where eid=\'"+eid+"\';"
 	cursor.execute(sql)
@@ -62,6 +84,7 @@ def createEidWithTimeIn( cursor, startTime, endTime ):
 			and employee.time_in<\'"+endTime+"\' and employee.eid<>present_requests.eid \
 			UNION select eid from present_requests where time_in<\'"+endTime+"\' and time_in>\'"+startTime+"\' ;" 	
 	cursor.execute(sql);
+	print cursor.fetchall()
 
 def createEidWithTimeOut( cursor, startTime, endTime ):
 	sql = "create or replace view time_out_list as select employee.eid \
@@ -94,6 +117,11 @@ def getAllEid( cursor ) :
 		data.append( str( row[0] ) )
 	return data
 
+def printAll(cursor):
+	sql = "select * from employee natural join employee_address"
+	cursor.execute(sql)
+	rows = cursor.fetchall()
+	print rows
 
 def getAllEmployees( cursor ) :
 	sql = "select * from employee"

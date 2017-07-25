@@ -7,7 +7,9 @@ class CarPool:
 	def __init__(self):
 		self.currentTime = datetime.datetime.now().time()
 		self.connectDB()
-		self.advanceTime = 1
+		self.advanceTime = 3
+		self.aidCount = 0
+		#self.mn = 0
 
 	def connectDB( self ): #connect to the sql database and create cursor object
 		self.db = DBConnection.DBConnection("localhost", "cab4employee", "", "cab4employee")
@@ -27,8 +29,8 @@ class CarPool:
 		print str(self.searchTime)
 		
 	def createTimeInView(self):
-		hr = self.searchTime.hour;
-		mn = self.searchTime.minute;
+		hr = self.searchTime.hour
+		mn = self.searchTime.minute
 		starthr = 0
 		startmn = 0
 		endhr = 0
@@ -38,11 +40,13 @@ class CarPool:
 			startmn = 45
 			endhr = hr
 			endmn = 15
+			#self.mn = 0;
 		elif mn >= 30 and mn < 59:
-			starthr = hr
+			starthr = hr-1
 			startmn = 15
 			endhr = hr
 			endmn = 45
+			#self.mn = 30
 		startTime = datetime.time( hour=starthr, minute=startmn )
 		endTime = datetime.time( hour=endhr, minute=endmn )
 		print str( startTime )
@@ -92,7 +96,6 @@ class CarPool:
 	def createTimeInAllocations(self):
 		allocationID = "AL" + datetime.datetime.now().strftime('%Y%m%d%H%M')
 		postalCodes = employeeAddressDB.getTimeInPostalCodes(self.cursor)
-		aidCount = 0
 		print postalCodes
 		for code in postalCodes:
 			eidList = employeeAddressDB.getTimeInEidList( self.cursor, code )
@@ -103,8 +106,8 @@ class CarPool:
 			print eidList
 			for j in range(0,count):
 				data = {}
-				data['aid'] = str( allocationID + str(aidCount) )
-				aidCount += 1
+				data['aid'] = str( allocationID + str(self.aidCount) )
+				self.aidCount += 1
 				base = j*4
 				data['eid'] = ""
 				for i in range( 0, 4 ):
@@ -125,7 +128,6 @@ class CarPool:
 	def createTimeOutAllocations(self):
 		allocationID = "AL" + datetime.datetime.now().strftime('%Y%m%d%H%M')
 		postalCodes = employeeAddressDB.getTimeOutPostalCodes(self.cursor)
-		aidCount = 0
 		print postalCodes
 		for code in postalCodes:
 			eidList = employeeAddressDB.getTimeOutEidList( self.cursor, code )
@@ -136,8 +138,8 @@ class CarPool:
 			print eidList
 			for j in range(0,count):
 				data = {}
-				data['aid'] = str( allocationID + str(aidCount) )
-				aidCount += 1
+				data['aid'] = str( allocationID + str(self.aidCount) )
+				self.aidCount += 1
 				base = j*4
 				data['eid'] = ""
 				for i in range( 0, 4 ):
@@ -158,6 +160,7 @@ class CarPool:
 	def doAllocations(self):
 		self.setSearchTime()	
 		print 'Search time : ' + str(self.searchTime)
+		#employeeDB.printAll(self.cursor)
 		self.createPresentRequests()
 		self.createTimeInView()
 		self.createTimeOutView()

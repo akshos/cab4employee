@@ -16,7 +16,7 @@ class EmployeeInterface (threading.Thread):
 		self.cursor = self.db.getCursor()
 
 	def sendData(self, data ):
-		print "sending:"+data;
+		print "sending : " + data;
 		self.clientConnection.send( data + '\n' )
 
 	def receiveData( self ):
@@ -42,6 +42,10 @@ class EmployeeInterface (threading.Thread):
 		msg = self.eid + " " + empdata['first_name'] + " " + empdata['last_name'] +" "
 		allallocations = allocationsDB.getAllocations(self.cursor)
 		aid=None
+		if allallocations == None:
+			msg += "0 0 0"
+			self.sendData(msg)
+			return
 		for allocation in allallocations:
 			eids=allocation['eid'].split(',')
 			for eid in eids:
@@ -51,10 +55,24 @@ class EmployeeInterface (threading.Thread):
 		if aid != None and cid != None:
 			allocationdata = allocationsDB.getAllocation(self.cursor, aid)
 			msg+="1 "
+			timein = 0
+			timeout = 0
+			presentDate = datetime.datetime.now().strftime('%Y-%m-%d')
+			data = {}
+			data['eid'] = empdata['eid']
+			data['req_date'] = presentDate
+			flag = requestDB.searchRequest(self.cursor,self.db,data)
+			if flag == True:
+				data = requestDB.getRequest(self.cursor, empdata['eid'], presentDate)
+				timein = data['time_in']
+				timeout = data['time_out']
+			else:
+				timein = empdata['time_in']
+				timeout = empdata['time_out']
 			if allocationdata['direction']=="pickup":
-				msg+="pickup "+empdata['time_in']
+				msg+="pickup "+timein
 			else :
-				msg+="drop "+empdata['time_out']
+				msg+="drop "+timeout
 		else:
 			msg+="0 0 0"
 		#cabid drivername time of pickup location of pickup
@@ -79,7 +97,7 @@ class EmployeeInterface (threading.Thread):
 			print allocationdata
 			if did != "None" and cid != "None":
 				driver = driversDB.getDriver(self.cursor, did)
-				msg = "cabdetails "+cid + " " + driver['first_name'] +" "+ driver['last_name'] +" "+driver['contact_number']+" "+allocationdata['atime']+" "+allocationdata['change_flag']
+				msg = "cabdetails "+cid + " " + driver['first_name'] +" "+ driver['last_name'] +" "+driver['contact_number']+" "+allocationdata['atime']+" "+allocationdata['change_flag']+" "+allocationdata['aid']
 				#employeeDB.getEmploye(allocationdata['eid'])[]
 				print msg
 				self.sendData(msg)
@@ -120,6 +138,7 @@ class EmployeeInterface (threading.Thread):
 		cabsDB.setRating(self.cursor, cabrating, allocationdata['cid'])
 		driverrating=(float(driverdata['rating'])+(float(msgList[2])+float(msgList[1]))/2)/2
 		driversDB.setRating(self.cursor, driverrating, allocationdata['did'])
+		allocationsDB.cancelAllocation(self.cursor, aid, self.eid)
 		self.db.commit();
 		#include adding comments to database as msgList[3]
 

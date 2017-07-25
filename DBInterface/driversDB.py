@@ -24,7 +24,7 @@ def getDriver( cursor, did ):
 	return data
 
 def searchDrivers(cursor, pattern):
-	sql = "select * from drivers where first_name like \'%" + pattern + "%\' ; "
+	sql = "select * from drivers where first_name like \'%" + pattern + "%\' and rating>=0; "
 	dataList = []
 	cursor.execute(sql)
 	rows = cursor.fetchall()
@@ -42,7 +42,7 @@ def searchDrivers(cursor, pattern):
 	return dataList
 
 def getRating( cursor, did):
-	sql= "select rating from drivers where did=\"" + did + "\" ;"
+	sql= "select rating from drivers where did=\"" + did + "\";"
 	cursor.execute( sql )
 	if cursor.rowcount == 0:
 		return None
@@ -56,8 +56,8 @@ def searchDriver( cursor, did ):
 		return False
 	return True
 
-def removeDriver(cursor, did):
-	sql = "delete from drivers where did=\"" + did + "\" "
+def removeDriver(cursor, did, rating):
+	sql = "update drivers set rating =\""+rating+"\", cid=\"None\" where did=\"" + did + "\" "
 	cursor.execute(sql)
 	if cursor.rowcount == 0:
 		return False
@@ -69,7 +69,12 @@ def modifyDriver(cursor, data):
 	last_name = data['last_name']
 	cid = data['cid']
 	contact = data['contact_number']
-	sql = "update drivers set first_name=\""+first_name+"\", last_name=\""+last_name+"\", cid=\""+cid+"\", contact_number=\""+contact+"\" where did=\""+did+"\" "
+	sql = ""
+	if data['rating'] == 'None':
+		sql = "update drivers set first_name=\""+first_name+"\", last_name=\""+last_name+"\", cid=\""+cid+"\", contact_number=\""+contact+"\" where did=\""+did+"\" "	
+	else:
+		rating = data['rating']
+		sql = "update drivers set first_name=\""+first_name+"\", last_name=\""+last_name+"\", cid=\""+cid+"\", contact_number=\""+contact+"\", rating=\""+rating+"\" where did=\""+did+"\" "	
 	cursor.execute(sql)
 	if cursor.rowcount == 0:
 		return False
@@ -131,7 +136,7 @@ def getDid( cursor, cid ):
 	return str( row[0] )
 
 def getAllDid( cursor ):
-	sql = "select did from drivers"
+	sql = "select did from drivers where rating>0"
 	cursor.execute(sql)
 	data=[]
 	for i in range ( 0, cursor.rowcount ):

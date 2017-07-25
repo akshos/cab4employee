@@ -9,6 +9,19 @@ def addRequest( cursor, db, data ):
 	cursor.execute( sql )
 	db.commit()
 
+def getRequest(cursor, eid, presentDate):
+	sql = "select * from requests where eid=\""+eid+"\" and req_date=\""+presentDate+"\" "
+	cursor.execute(sql)
+	if cursor.rowcount == 0:
+		return None
+	row = cursor.fetchone()
+	data = {}
+	data['eid'] = str(row[0])
+	data['req_date'] = str(row[1])
+	data['time_in'] = str(row[2])
+	data['time_out'] = str(row[3])
+	return data
+
 def searchRequest( cursor, db, data ):
 	sql = "select * from requests where eid=\"" + data['eid'] + "\" and req_date=\""+ data['req_date'] +"\""
 	cursor.execute( sql )

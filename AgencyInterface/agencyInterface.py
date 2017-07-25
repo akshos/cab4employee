@@ -71,6 +71,13 @@ class AgencyInterface (threading.Thread):
 			driversDB.insertDriver( self.cursor, data )
 			self.db.commit()
 			self.sendData("done")
+		elif int( checkData['rating'] ) == -1 :
+			self.sendData("flagged")
+		elif int( checkData['rating'] ) < -1 :
+			data['rating'] = str( -1* int(checkData['rating']) )
+			driversDB.modifyDriver( self.cursor, data )
+			self.db.commit()
+			self.sendData("redone")
 		else:
 			self.sendData("existing")
 
@@ -108,7 +115,7 @@ class AgencyInterface (threading.Thread):
 			msg += data['cid'] + " " + data['c_model'] + " " + data['maxpassengers'] + " " + data['rating'] + " "
 		print "msg : "+msg
 		self.sendData( msg )
-	
+		
 	def sendCab(self, msgList):
 		cid = msgList[1]
 		msg = ""
@@ -167,7 +174,7 @@ class AgencyInterface (threading.Thread):
 		pattern = msgList[1]
 		dataList = driversDB.searchDrivers(self.cursor, pattern)
 		if dataList == None:
-			self.sendData(str(" "))
+			self.sendData("NotFound")
 			return
 		for data in dataList:
 			msg += data['did'] + " " + data['first_name'] + " " + data['last_name'] + " " + data['cid'] + " " + data['contact_number'] + " " + data['rating'] + " "
@@ -268,6 +275,7 @@ class AgencyInterface (threading.Thread):
 		data['last_name'] = msgList[3]
 		data['cid'] = msgList[4]
 		data['contact_number'] = msgList[5]
+		data['rating'] = 'None'
 		status = driversDB.modifyDriver(self.cursor, data)
 		if status == True:
 			self.sendData("done")
@@ -278,10 +286,9 @@ class AgencyInterface (threading.Thread):
 	def removeDriver(self, msgList):
 		did = msgList[1]
 		driver = driversDB.getDriver(self.cursor, did)
-		if float(driver['rating']) <= 1 :
-			self.sendData("flagged")
-			return
-		status = driversDB.removeDriver(self.cursor, did)
+		rating = int(driver['rating'])
+		rating = -1*rating
+		status = driversDB.removeDriver(self.cursor, did, str(rating) )
 		if status == True:
 			self.sendData("done")
 			self.db.commit()

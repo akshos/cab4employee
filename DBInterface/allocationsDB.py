@@ -172,5 +172,10 @@ def cancelAllocation( cursor, aid, eid ):
 			neweid+=id+","
 	#print neweid
 	neweid = neweid[:-1]
-	sql = "update allocations set eid ='"+neweid+"' where aid= '"+aid+"'"
+	sql = ""
+	if len(eidList)==1:
+		neweid="None"
+		sql = "delete from allocations where aid=\"" + aid + "\" ";
+	else :
+		sql = "update allocations set eid ='"+neweid+"' where aid= '"+aid+"'"
 	cursor.execute( sql )

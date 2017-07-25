@@ -81,10 +81,13 @@ class CompanyInterface (threading.Thread):
 			data=employeeDB.getEmployee(self.cursor,eid)
 			address=employeeAddressDB.getEmployeeAddress(self.cursor,eid)
 			employeedetails += data['eid']+" "+data['first_name']+" "+data['last_name']+" "+data['date_of_reg']+" "+data['contact_num']+" "+data['account_id']+" "+data['time_in']+" "+data['time_out']+" "+address['house_num']+" "+ address['street_name']+" "+address['city']+" "+address['postal_code']+" "
-		cab=cabsDB.getCab(self.cursor,allocation['cid'])
-		cabdetails=cab['cid']+" "+cab['c_model']+" "+cab['maxpassengers']
-		driver=driversDB.getDriver(self.cursor,allocation['did'])
-		driverdetails=driver['did']+" "+driver['first_name']+" "+driver['last_name']+" "+driver['contact_number']+" "+driver['rating']
+		cabdetails = ""
+		driverdetails = ""
+		if allocation['cid'] != "None":
+			cab=cabsDB.getCab(self.cursor,allocation['cid'])
+			cabdetails=cab['cid']+" "+cab['c_model']+" "+cab['maxpassengers']
+			driver=driversDB.getDriver(self.cursor,allocation['did'])
+			driverdetails=driver['did']+" "+driver['first_name']+" "+driver['last_name']+" "+driver['contact_number']+" "+driver['rating']
 		msg=cabdetails+" "+driverdetails+" "+employeedetails
 		self.sendData(msg)
 
@@ -136,6 +139,15 @@ class CompanyInterface (threading.Thread):
 				self.db.commit()
 			else:
 				self.sendData("fail")
+	
+	def getEmployeeFull(self, msgList):
+		eid = msgList[1]
+		data = employeeDB.getEmployeeFull(self.cursor, eid)
+		if data == None:
+			self.sendData("fail")
+			return
+		msg = data['eid']+" "+data['first_name']+" "+data['last_name']+" "+data['date_of_reg']+" "+data['contact_num']+" "+data['account_id']+" "+data['time_in']+" "+data['time_out']+" "+data['house_num']+" "+data['street_name']+" "+data['city']+" "+data['postal_code']+" "
+		self.sendData(msg)
 		
 	def run( self ): #main entry point
 		try:
@@ -197,6 +209,9 @@ class CompanyInterface (threading.Thread):
 				elif msgList[0] == 'deallocatecab':
 					print 'deallocate cab'
 					self.deallocateCab( msgList )
+				elif msgList[0] == 'getemployeefull':
+					print 'get employee full'
+					self.getEmployeeFull(msgList)
 				else :
 					return
 			##
