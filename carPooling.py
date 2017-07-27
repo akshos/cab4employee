@@ -7,9 +7,9 @@ class CarPool:
 	def __init__(self):
 		self.currentTime = datetime.datetime.now().time()
 		self.connectDB()
-		self.advanceTime = 3
+		self.advanceTime = 2
 		self.aidCount = 0
-		#self.mn = 0
+		self.mn = 0
 
 	def connectDB( self ): #connect to the sql database and create cursor object
 		self.db = DBConnection.DBConnection("localhost", "cab4employee", "", "cab4employee")
@@ -40,13 +40,13 @@ class CarPool:
 			startmn = 45
 			endhr = hr
 			endmn = 15
-			#self.mn = 0;
+			self.mn = 0;
 		elif mn >= 30 and mn < 59:
 			starthr = hr-1
 			startmn = 15
 			endhr = hr
 			endmn = 45
-			#self.mn = 30
+			self.mn = 30
 		startTime = datetime.time( hour=starthr, minute=startmn )
 		endTime = datetime.time( hour=endhr, minute=endmn )
 		print str( startTime )
@@ -67,11 +67,13 @@ class CarPool:
 			startmn = 45
 			endhr = hr
 			endmn = 15
+			self.mn = 0;
 		elif mn >= 30 and mn < 59:
 			starthr = hr
 			startmn = 15
 			endhr = hr
 			endmn = 45
+			self.mn = 30;
 		startTime = datetime.time( hour=starthr, minute=startmn )
 		endTime = datetime.time( hour=endhr, minute=endmn )
 		print str( startTime )
@@ -84,12 +86,13 @@ class CarPool:
 		presentDate = datetime.datetime.now().strftime('%Y-%m-%d')
 		print 'present date ' + presentDate
 		requestDB.createPresentRequests(self.cursor, str(presentDate) )
+		self.db.commit()
 			
 	def getPickupTime(self, direction):
 		hr = self.searchTime.hour
 		if direction == 'pickup':
 			hr = hr - 1
-		mn = self.searchTime.minute
+		mn = self.mn;
 		pickupTime = datetime.time( hour=hr, minute=mn )
 		return str( pickupTime )
 	
@@ -166,6 +169,7 @@ class CarPool:
 		self.createTimeOutView()
 		self.createTimeInAllocations()
 		self.createTimeOutAllocations()
+		self.db.commit()
 		return
 		
 

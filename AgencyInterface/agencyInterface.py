@@ -84,6 +84,9 @@ class AgencyInterface (threading.Thread):
 	def sendAllocations( self ):
 		dataList = allocationsDB.getAllocations( self.cursor )
 		msg = ""
+		if dataList == None:
+			self.sendData("None")
+			return
 		for data in dataList:
 			count = len( data['eid'].split(',') )
 			msg += data['aid']+" "+data['cid']+" "+str(count)+" "+data['atime']+" "
@@ -151,7 +154,7 @@ class AgencyInterface (threading.Thread):
 				self.sendData("fail")
 				return
 			status = allocationsDB.modifyDid( self.cursor, aid, did )
-			status = allocationsDB.setChangeFlag( self.cursor, aid )
+			allocationsDB.setChangeFlag( self.cursor, aid )
 			if status == True :
 				self.db.commit()
 				self.sendData("success")
@@ -237,13 +240,14 @@ class AgencyInterface (threading.Thread):
 	def deallocateCab(self, msgList):
 		aid = msgList[1]
 		status = allocationsDB.resetCidDid( self.cursor, aid )
+		print 'reset cid status : ' + str(status)
 		if status == True:
 			status = allocationsDB.setChangeFlag( self.cursor, aid )
-			if status == True:
-				self.sendData("success")
-				self.db.commit()
-			else:
-				self.sendData("fail")
+			print 'set change_flag status : ' + str(status)
+			self.sendData("success")
+			self.db.commit()
+		else:
+			self.sendData("fail")
 	
 	def removeCab(self, msgList):
 		cid = msgList[1]
@@ -303,6 +307,21 @@ class AgencyInterface (threading.Thread):
 			self.sendData(msg)
 		else:
 			self.sendData("failed")
+	
+	def combineAllocations(self, msgList):
+		count = int( msgList[1] )
+		aidList = msgList[2].split(',')
+		mainAid = str(aidList[0])
+		mainEid = allocationsDB.getEid(self.cursor, mainAid)
+		del(aidList[0])
+		for aid in aidList:
+			eid = allocationsDB.getEid(self.cursor,aid)
+			mainEid += "," + eid
+			allocationsDB.deleteAllocation(self.cursor, aid)
+		allocationsDB.modifyEid(self.cursor, mainAid, mainEid)
+		self.db.commit()
+		self.sendData("done")
+			
 		
 	def run( self ): #main entry point
 		try:
@@ -402,6 +421,9 @@ class AgencyInterface (threading.Thread):
 				elif msgList[0] == 'getdriverfromcid':
 					print 'get driver from cid'
 					self.getDriverFromCid(msgList)
+				elif msgList[0] == 'combineallocations':
+					print 'combine allocations'
+					self.combineAllocations(msgList)
 				else :
 					return
 			##

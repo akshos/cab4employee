@@ -3,6 +3,7 @@ from CompanyInterface import companyInterface
 from AgencyInterface import agencyInterface
 from EmployeeInterface import employeeInterface
 from DBInterface import DBConnection
+from Http import http_server
 
 threadList = []
 
@@ -13,9 +14,8 @@ def server():
 	serverSocket = socket.socket()
 	serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 	serverSocket.setsockopt( socket.IPPROTO_TCP, socket.TCP_NODELAY, 1 )
-	#serverSocket.setsockopt( socket.SOL_SOCKET, socket.SO_SNDBUF, 100 )
 	host = "192.168.2.33"
-	port = 2345						
+	port = 2345					
 	serverSocket.bind( (host,port) )
 	global db
 	try:
@@ -25,21 +25,6 @@ def server():
 			serverSocket.listen(5)
 			clientConnection, clientAddress = serverSocket.accept()
 			print "received connection from : ", clientAddress
-#			msg = str( clientConnection.recv(1024) )
-#			print 'Recieved initial message : ' + msg
-#			msgList = msg.split()
-#			interfaceType = msgList[0]
-#			print "interface type : ", interfaceType
-#			if interfaceType == 'companyinterface': #spawn a thread for each client
-#				clientThread = companyInterface.CompanyInterface( clientConnection, msgList, db ).start()
-#			elif interfaceType == 'agencyinterface':
-#				clientThread = agencyInterface.AgencyInterface( clientConnection, msgList, db ).start()
-#			elif interfaceType == 'employeeinterface':
-#				clientThread = employeeInterface.EmployeeInterface( clientConnection, msgList, db ).start()
-#			else :
-#				clientConnection.close()
-#			if clientThread != None:
-#				threadList.append( clientThread )
 			msg = str( clientConnection.recv(1024) )
 			print 'Recieved initial message : ' + msg
 			msgList = msg.split()
@@ -55,8 +40,10 @@ def server():
 				clientThread = agencyInterface.AgencyInterface( clientConnection, msgList, db ).start()
 			elif interfaceType == 'employeeinterface':
 				clientThread = employeeInterface.EmployeeInterface( clientConnection, msgList, db ).start()
-			else :
-				print 'invalid interface type'
+			elif interfaceType == 'GET' or interfaceType == 'HEAD' or interfaceType == 'POST' :
+				httpThread = http_server.Http_Server( clientConnection, msg, db ).start()
+			else:
+				print 'Invalid request'
 				clientConnection.close()
 			if clientThread != None:
 				threadList.append( clientThread )

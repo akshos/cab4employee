@@ -61,6 +61,13 @@ def modifyCid(cursor, aid, cid):
 		return False
 	return True
 
+def modifyEid(cursor, aid, eid):
+	sql = "update allocations set eid=\"" + eid + "\" where aid=\"" + aid + "\" ;"
+	cursor.execute(sql)
+	if cursor.rowcount == 0:
+		return False
+	return True
+
 def modifyDid(cursor, aid, did):
 	sql = "update allocations set did=\"" + did + "\" where aid=\"" + aid + "\" ;" 
 	cursor.execute(sql)

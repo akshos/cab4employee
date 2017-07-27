@@ -5,7 +5,7 @@ def insertLogin( cursor, data ):
 			data['username']	+ "\" ,\"" 	+ 	\
 			data['password']	+ "\" ,\"" 	+ 	\
 			data['type'] 		+ "\" ,\""	+ 	\
-			data['eid'] 		+ ") "
+			data['eid'] 		+ "\" ) "
 	cursor.execute( sql )
 
 def changePassword(cursor, un, newpass):
@@ -27,3 +27,17 @@ def authenticate( cursor, username, password, logintype ):
 	if logintype == 'emp':
 		eid = employeeDB.getEidFromUsername( cursor, username )
 	return eid
+
+def checkEid(cursor, eid):
+	sql = "select eid from login where eid=\""+eid+"\" "
+	cursor.execute(sql)
+	if cursor.rowcount == 0:
+		return False
+	return True
+
+def checkUsername(cursor, username):
+	sql = "select username from login where username=\""+username+"\" "
+	cursor.execute(sql)
+	if cursor.rowcount == 0:
+		return False
+	return True
