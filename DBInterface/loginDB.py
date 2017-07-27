@@ -25,11 +25,11 @@ def authenticate( cursor, username, password, logintype ):
 	if cursor.rowcount == 0 :
 		return None
 	if logintype == 'emp':
-		eid = loginDB.getEidFromUsername( cursor, username )
+		eid = getEidFromUsername( cursor, username )
 		#add condition here to check if there is already a username in that field otherwise it gets refreshed each time
 		#that doesnt seem like a problem atm though.
-		employeeDB.setUsername(self.cursor, eid, username)
-		self.db.commit()
+		employeeDB.setUsername(cursor, eid, username)
+		#db.commit()
 	return eid
 
 def checkEid(cursor, eid):

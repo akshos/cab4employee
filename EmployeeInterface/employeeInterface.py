@@ -34,6 +34,7 @@ class EmployeeInterface (threading.Thread):
 		self.username = self.msgList[2]
 		password = self.msgList[3]
 		self.eid = loginDB.authenticate( self.cursor, self.username, password, self.loginType )
+		self.db.commit()
 		#self.eid="e01"
 		del self.msgList
 
