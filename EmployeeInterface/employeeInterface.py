@@ -162,6 +162,22 @@ class EmployeeInterface (threading.Thread):
 			date1 = date1 + day
 		self.db.commit()
 
+	# def addRequest(self,msgList):
+	# 	count = msgList[1]
+	# 	time_in = msgList[1]
+	# 	time_out = msgList[2]
+	# 	del msgList[:3]
+	# 	for d in msgList:
+	# 		#date=d.split('/')
+	# 		data={}
+	# 		data['eid']=self.eid
+	# 		data['req_date']=str(d)
+	# 		data['time_in']=time_in
+	# 		data['time_out']=time_out
+	# 		print("add")
+	# 		requestDB.addRequest(self.cursor, self.db, data)
+	# 		self.db.commit()
+
 	def run( self ): #main entry point
 		try:
 			self.connectDB() #establish connection to database
