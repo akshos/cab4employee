@@ -43,24 +43,32 @@ class Http_Server (threading.Thread):
 	def sendEmail(self, eid, username, password):
 		fromAddr = 'humsafarcabs@yahoo.com'
 		toAddr = employeeDB.getEmail( self.cursor, eid )
-		subj='HumSafar Verification'
+		subj = 'HumSafar Verification'
 		date= str(datetime.datetime.now().strftime('%d/%m/%Y'))
 		
 		message_text="Hello,\n\nHumSafar password for "+username+" is "+password
 		message_text+="\n\nLogin using the username and password to start the service"
 		msg = "From: HumSafar <%s>\nTo: <%s>\nMIME-Version: 1.0\nContent Type: text/html\nSubject: %s\nDate: %s\n\n%s" % ( fromAddr, toAddr, subj, date, message_text )	 	
-		
+		if toAddr == 'None':
+			print 'no email id found'
+			return False
 		username = str('humsafarcabs@yahoo.com')  
 		password = str('kannan119504')  
 		print 'sending email to ' + toAddr + ' from ' + fromAddr
-		server = smtplib.SMTP("smtp.mail.yahoo.com",587)
-		server.starttls()
-		print 'attempting login'
-		server.login(username,password)
-		print 'sending mail'
-		server.sendmail(fromAddr, toAddr,msg)
-		print 'sent'
-		server.quit() 
+		try:
+			server = smtplib.SMTP("smtp.mail.yahoo.com",587)
+			server.starttls()
+			print 'attempting login'
+			server.login(username,password)
+			print 'sending mail'
+			server.sendmail(fromAddr, toAddr,msg)
+			print 'sent'
+			server.quit()
+		except Exception as e:
+			print 'Failed to send email\n'
+			print e
+			return False
+		return True
 	
 	def sendFile(self, file_requested):
 		try:
@@ -72,7 +80,7 @@ class Http_Server (threading.Thread):
 		except Exception as e: #in case file was not found, generate 404 page
 			print ("Warning, file not found. Serving response code 404\n", e)
 			response_headers = self._gen_headers(404)
-			response_content = "<html><body><p>Error 404: File not found</p><p>Python HTTP server</p></body></html>"
+			response_content = "<html><body><p>Error 404: File not found</p><p>HumSafar HTTP server</p></body></html>"
 		
 		server_response =  response_headers.encode() # return headers for GET and HEAD
 		server_response +=  response_content  # return additional conten for GET only
@@ -137,8 +145,10 @@ class Http_Server (threading.Thread):
 				return
 			self.createAccount(eid, username, password)
 			self.sendFile(self.www_dir+'/registered.html')
-			self.sendEmail(eid, username, password)
-			self.db.commit()
+			status = self.sendEmail(eid, username, password)
+			if status == True:
+				self.db.commit()
+		
 		else:
 			print("Unknown HTTP request method:", request_method)
 			self.conn.close()

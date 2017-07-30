@@ -67,6 +67,30 @@ class CompanyInterface (threading.Thread):
 		else:
 			self.sendData("notfound")
 
+	def searchDrivers(self, msgList):
+		msg = ""
+		pattern = msgList[1]
+		dataList = driversDB.searchDrivers(self.cursor, pattern)
+		if dataList == None:
+			self.sendData("NotFound")
+			return
+		for data in dataList:
+			msg += data['did'] + " " + data['first_name'] + " " + data['last_name'] + " " + data['cid'] + " " + data['contact_number'] + " " + data['rating'] + " "
+		print msg
+		self.sendData(msg)
+	
+	def searchCabs(self, msgList):
+		msg = ""
+		pattern = msgList[1]
+		dataList = cabsDB.searchCabs(self.cursor, pattern)
+		if dataList == None:
+			self.sendData(str(" "))
+			return
+		for data in dataList:
+			msg += data['cid'] + " " + data['c_model'] + " " + data['maxpassengers'] + " " + data['rating'] + " "
+		print msg
+		self.sendData(msg)
+
 	def rejectAllocation( self, msgList ):
 		for i in range( 1, len(msgList) ):
 			allocationsDB.deleteAllocation(self.cursor,msgList[i])
@@ -212,6 +236,12 @@ class CompanyInterface (threading.Thread):
 				elif msgList[0] == 'getemployeefull':
 					print 'get employee full'
 					self.getEmployeeFull(msgList)
+				elif msgList[0] == 'searchdrivers':
+					print 'search drivers'
+					self.searchDrivers(msgList)
+				elif msgList[0] == 'searchcabs':
+					print 'search cabs'
+					self.searchCabs(msgList)
 				else :
 					return
 			##
