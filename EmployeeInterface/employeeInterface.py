@@ -34,6 +34,7 @@ class EmployeeInterface (threading.Thread):
 		self.username = self.msgList[2]
 		password = self.msgList[3]
 		self.eid = loginDB.authenticate( self.cursor, self.username, password, self.loginType )
+		self.db.commit()
 		#self.eid="e01"
 		del self.msgList
 
@@ -142,25 +143,43 @@ class EmployeeInterface (threading.Thread):
 		self.db.commit();
 		#include adding comments to database as msgList[3]
 
+	# def addRequest(self,msgList):
+	# 	startdate=msgList[2].split('/')
+	# 	enddate=msgList[3].split('/')
+	# 	print(str(startdate[0])+" "+str(startdate[1])+" "+str(startdate[2]))
+	# 	date1 = datetime.date(int(startdate[0]),int(startdate[1]),int(startdate[2]))
+	# 	date2 = datetime.date(int(enddate[0]),int(enddate[1]),int(enddate[2]))
+	# 	day = datetime.timedelta(days=1)
+	# 	print (str(date1)+" "+str(date2)+" ")
+	# 	data={}
+	# 	while date1 <= date2:
+	# 		data['eid']=self.eid
+	# 		data['req_date']=str(date1)
+	# 		data['time_in']=msgList[4]
+	# 		data['time_out']=msgList[5]
+	# 		print("add")
+	# 		requestDB.addRequest(self.cursor, self.db, data)
+	# 		self.db.commit()
+	# 		date1 = date1 + day
+	# 	self.db.commit()
+
 	def addRequest(self,msgList):
-		startdate=msgList[2].split('/')
-		enddate=msgList[3].split('/')
-		print(str(startdate[0])+" "+str(startdate[1])+" "+str(startdate[2]))
-		date1 = datetime.date(int(startdate[0]),int(startdate[1]),int(startdate[2]))
-		date2 = datetime.date(int(enddate[0]),int(enddate[1]),int(enddate[2]))
-		day = datetime.timedelta(days=1)
-		print (str(date1)+" "+str(date2)+" ")
-		data={}
-		while date1 <= date2:
+		count = msgList[1]
+		time_in = msgList[1]
+		time_out = msgList[2]
+		print("count:"+count+"time_in:"+time_in+"time_out:"+time_out)
+		del msgList[:4]
+		for d in msgList:
+			#date=d.split('/')
+			print(d)
+			data={}
 			data['eid']=self.eid
-			data['req_date']=str(date1)
-			data['time_in']=msgList[4]
-			data['time_out']=msgList[5]
+			data['req_date']=str(d)
+			data['time_in']=time_in
+			data['time_out']=time_out
 			print("add")
 			requestDB.addRequest(self.cursor, self.db, data)
 			self.db.commit()
-			date1 = date1 + day
-		self.db.commit()
 
 	def run( self ): #main entry point
 		try:
